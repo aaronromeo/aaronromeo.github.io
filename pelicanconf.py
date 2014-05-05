@@ -6,7 +6,7 @@ AUTHOR = u'Aaron'
 SITENAME = u'This blog might bark and byte'
 SITEURL = ''
 
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = 'Canada/Eastern'
 
 DEFAULT_LANG = u'en'
 
@@ -16,14 +16,13 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
 # Blogroll
-LINKS =  (('Pelican', 'http://getpelican.com/'),
-          ('Python.org', 'http://python.org/'),
-          ('Jinja2', 'http://jinja.pocoo.org/'),
-          ('You can modify those links in your config file', '#'),)
+# LINKS =  (('Pelican', 'http://getpelican.com/'),
+#           ('Python.org', 'http://python.org/'),
+#           ('Jinja2', 'http://jinja.pocoo.org/'),
+#           ('You can modify those links in your config file', '#'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('@TweetsFromAaron', 'https://twitter.com/tweetsfromaaron'),)
 
 DEFAULT_PAGINATION = 10
 
