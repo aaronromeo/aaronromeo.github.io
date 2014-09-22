@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = u'Aaron'
-SITENAME = u'This blog might bark and byte'
+AUTHOR = u'Aaron Romeo'
+SITENAME = u'&gt;&nbsp;aaronromeo.com'
+# SITEURL = 'http://aaronromeo.com'
 SITEURL = ''
 
+PATH = 'content'
+
 TIMEZONE = 'Canada/Eastern'
+# THEME = 'themes/simple'
+THEME = 'themes/aaronromeo.com'
 
 DEFAULT_LANG = u'en'
 
@@ -16,10 +21,10 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
 # Blogroll
-# LINKS =  (('Pelican', 'http://getpelican.com/'),
-#           ('Python.org', 'http://python.org/'),
-#           ('Jinja2', 'http://jinja.pocoo.org/'),
-#           ('You can modify those links in your config file', '#'),)
+# LINKS = (('Pelican', 'http://getpelican.com/'),
+#          ('Python.org', 'http://python.org/'),
+#          ('Jinja2', 'http://jinja.pocoo.org/'),
+#          ('You can modify those links in your config file', '#'),)
 
 # Social widget
 SOCIAL = (('@TweetsFromAaron', 'https://twitter.com/tweetsfromaaron'),)

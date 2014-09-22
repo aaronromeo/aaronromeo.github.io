@@ -7,8 +7,6 @@ Slug: s3-storage-with-django
 Authors: Aaron Romeo
 Summary: Getting that clutter off your server so it can serve your all important code
 
-## Storing images (or files) on S3 with Django ##
-
 There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which isn't a good idea in most cases) or upload it to a server/service which specializes in delivering you content. Enter S3.
 
 Django and S3 to play nice is pretty straightforward. This tutorial/guide/journal assumes a few things.
@@ -26,7 +24,7 @@ Pip install these libraries...
 
     pip install django-storages
     pip install boto
-    
+
 Once you got this done, modify your `settings.py` file.
 
     :::python
@@ -69,6 +67,6 @@ Next modify your `models.py` file in the application you want to add this to
             ordering = ['last_name', 'first_name']
 
 That is it... At this point your images will get punted to S3.
- 
- 
+
+
 > Written with [StackEdit](https://stackedit.io/).

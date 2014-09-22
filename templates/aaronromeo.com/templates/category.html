@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block articles %}
+<h2>Articles in the {{ category }} category</h2>
+    {% for article in articles %}
+        {% include "sub-article.html" %}
+    {% endfor %}
+
+    <paginator>
+        {% include "paginator.html" %}
+    </paginator>
+
+{% endblock %}
