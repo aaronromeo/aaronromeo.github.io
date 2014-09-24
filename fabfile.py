@@ -62,6 +62,7 @@ def publish():
     print "This is the current branch {}".format(current_branch)
     local('ghp-import output')
     local('git checkout master')
+    local('git pull')
     local('git push git@github.com:aaronromeo/aaronromeo.github.io.git gh-pages:master')
     local('git checkout {}'.format(current_branch))
 
