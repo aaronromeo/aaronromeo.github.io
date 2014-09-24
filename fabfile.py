@@ -58,7 +58,6 @@ def publish():
     #     local_dir=DEPLOY_PATH.rstrip('/') + '/',
     #     delete=True
     # )
-    rebuild()
     current_branch = local('git rev-parse --abbrev-ref HEAD')
     local('ghp-import output')
     local('git checkout master')
