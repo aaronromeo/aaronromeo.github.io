@@ -58,7 +58,8 @@ def publish():
     #     local_dir=DEPLOY_PATH.rstrip('/') + '/',
     #     delete=True
     # )
-    current_branch = local('git rev-parse --abbrev-ref HEAD')
+    current_branch = local('git rev-parse --abbrev-ref HEAD', capture=True)
+    print "This is the current branch {}".format(current_branch)
     local('ghp-import output')
     local('git checkout master')
     local('git push git@github.com:aaronromeo/aaronromeo.github.io.git gh-pages:master')
