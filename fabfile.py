@@ -49,12 +49,19 @@ def cf_upload():
           '-K {cloudfiles_api_key} '
           'upload -c {cloudfiles_container} .'.format(**env))
 
-@hosts(production)
+#@hosts(production)
 def publish():
-    local('pelican -s publishconf.py')
-    project.rsync_project(
-        remote_dir=dest_path,
-        exclude=".DS_Store",
-        local_dir=DEPLOY_PATH.rstrip('/') + '/',
-        delete=True
-    )
+    # local('pelican -s publishconf.py')
+    # project.rsync_project(
+    #     remote_dir=dest_path,
+    #     exclude=".DS_Store",
+    #     local_dir=DEPLOY_PATH.rstrip('/') + '/',
+    #     delete=True
+    # )
+    rebuild()
+    current_branch = local('git rev-parse --abbrev-ref HEAD')
+    local('ghp-import output')
+    local('git checkout master')
+    local('git push git@github.com:aaronromeo/aaronromeo.github.io.git gh-pages:master')
+    local('git checkout {}'.format(current_branch))
+
