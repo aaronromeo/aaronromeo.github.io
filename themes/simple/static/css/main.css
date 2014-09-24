@@ -1,0 +1,17 @@
+/*
+	Name: Smashing HTML5
+	Date: July 2009
+	Description: Sample layout for HTML5 and CSS3 goodness.
+	Version: 1.0
+	License: MIT <http://opensource.org/licenses/MIT>
+	Licensed by: Smashing Media GmbH <http://www.smashingmagazine.com/>
+	Original author: Enrique Ramírez <http://enrique-ramirez.com/>
+*/
+
+/* Imports */
+@import url("standardize.css");
+@import url("index-grid.css");
+@import url("pygment.css");
+@import url("typogrify.css");
+@import url(//fonts.googleapis.com/css?family=Dosis:400,700,800);
+@import url("styles.css");
