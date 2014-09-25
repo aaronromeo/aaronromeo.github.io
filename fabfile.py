@@ -60,7 +60,8 @@ def publish():
     # )
     current_branch = local('git rev-parse --abbrev-ref HEAD', capture=True)
     print "This is the current branch {}".format(current_branch)
-    local('git branch -D gh-pages')
+    with settings(warn_only=True):
+        local('git branch -D gh-pages')
     local('git checkout gh-pages')
     local('git pull')
     local('git checkout {}'.format(current_branch))
