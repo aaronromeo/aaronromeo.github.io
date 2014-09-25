@@ -61,17 +61,7 @@ def publish():
     current_branch = local('git rev-parse --abbrev-ref HEAD', capture=True)
     print "This is the current branch {}".format(current_branch)
     local('git fetch origin')
-    # with settings(warn_only=True):
-    #     local('git branch -D gh-pages')
-    # local('git checkout gh-pages')
-    # local('git pull')
-    # local('git checkout {}'.format(current_branch))
     local('ghp-import output')
-    # local('git checkout gh-pages')
-    # local('rm *.pyc')
-    # local('git push origin')
-    # local('git checkout master')
-    # local('git pull')
     local('git push -f git@github.com:aaronromeo/aaronromeo.github.io.git gh-pages:master')
     local('git checkout {}'.format(current_branch))
 
