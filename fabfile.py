@@ -66,6 +66,7 @@ def publish():
     local('git checkout {}'.format(current_branch))
     local('ghp-import output')
     local('git checkout gh-pages')
+    local('rm *.pyc')
     local('git commit -a -m "Still hacking away"')
     local('git push origin')
     local('git checkout master')
