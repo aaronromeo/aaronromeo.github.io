@@ -1,20 +1,28 @@
-# Jest Snapshot testing within Rails Webpacker
+Title: Jest Snapshot testing within Rails Webpacker
+Date: 2017-11-12 20:44
+Modified: 2017-11-12 20:44
+Category: Rails
+Tags: rails, jest, webpacker, reactjs
+Slug: jest-snapshots-with-webpacker
+Authors: Aaron Romeo
+Summary: Jest snapshot within Rails Webpacker
+
 ### Preable
 Ah... The state of the Rails ecosystem couldn't be better for me. With the supplementing of the asset pipeline with [Webpacker](https://github.com/rails/webpacker) the world of Javascript development has joined nicely with the world of Rails development.
 If you are like me and using ReactJS as your staple JS view layer, you probably know of the testing tool [Jest](https://facebook.github.io/jest/) also created by the smart people at Facebook. This short tutorial assumes you have Webpacker and ReactJS running to to help, and you get setup with Jest.
 ### Setup
-1. Install your packages. 
-`yarn` or `npm` install the following packages 
+1. Install your packages.
+`yarn` or `npm` install the following packages
     * `jest` (the main testing library)
     * `babel-jest` (assuming you are using `babel`, this is the associated `jest` plugin)
-    * `babel-preset-es2015` (Babel preset for all es2015 plugins) 
-    * `babel-preset-react` (Babel preset for react) 
+    * `babel-preset-es2015` (Babel preset for all es2015 plugins)
+    * `babel-preset-react` (Babel preset for react)
     * `react-test-renderer` (another FB testing tool which renders React components to pure Javascript objects)
 `yarn` does a better job of managing your JS packages, so here you go...
 ```yarn add --dev jest babel-jest babel-preset-es2015 babel-preset-react react-test-renderer```
 1. Add the `.baberc` file to your project root.
-Till this point, your project has been happily using the `config/webpack/loaders/react.js` and `config/webpack/loaders/babel.js` to translate your ES6 JS back to the stoneage. With Jest, though, it needs a little something more. 
-This is what my `.babelrc` file looks like. Yours will be similar, but your `plugins` will be dependent on what you have installed in your `react.js` or `babel.js` files. 
+Till this point, your project has been happily using the `config/webpack/loaders/react.js` and `config/webpack/loaders/babel.js` to translate your ES6 JS back to the stoneage. With Jest, though, it needs a little something more.
+This is what my `.babelrc` file looks like. Yours will be similar, but your `plugins` will be dependent on what you have installed in your `react.js` or `babel.js` files.
     ```
     {
       "presets": [
@@ -55,14 +63,14 @@ Say you have the files in your project to define the component `BlogExample`
 * app/javascript/components/blog_example/index.js
     ```javascript
     import BlogExample from './blog_example'
-    
+
     export default BlogExample
     ```
 * app/javascript/components/blog_example/blog_example.js
     ```javascript
     import PropTypes from 'prop-types'
     import React, { Component } from 'react'
-    
+
     class BlogExample extends Component {
       static propTypes = {
         contacts: PropTypes.arrayOf(
@@ -73,12 +81,12 @@ Say you have the files in your project to define the component `BlogExample`
         ).isRequired,
         handleDeleteContact: PropTypes.func.isRequired,
       }
-    
+
       constructor(props) {
         super(props)
         this.renderContacts = this.renderContacts.bind(this)
       }
-    
+
       renderContacts() {
         return this.props.contacts.map(contact => (
           <li key={contact.id}>
@@ -86,7 +94,7 @@ Say you have the files in your project to define the component `BlogExample`
           </li>
         ))
       }
-    
+
       render() {
         return (
           <div>
@@ -95,7 +103,7 @@ Say you have the files in your project to define the component `BlogExample`
         )
       }
     }
-    
+
     export default BlogExample
     ```
 You could then create the following base test case
@@ -104,7 +112,7 @@ You could then create the following base test case
     import React from 'react'
     import renderer from 'react-test-renderer'
     import BlogExample from '../index'
-    
+
     test('Renders contacts', () => {
       const component = renderer.create(
         <BlogExample
@@ -212,7 +220,7 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 `bin/yarn jest -- -u` updates your snapshot.
 
 ### Gotchas
-`yarn` doesn't verify that the version of `react-test-renderer` matches the version of `react` you have installed. 
+`yarn` doesn't verify that the version of `react-test-renderer` matches the version of `react` you have installed.
 ```
          "jest": "21.2.1",
     -    "react-test-renderer": "16.0.0",
