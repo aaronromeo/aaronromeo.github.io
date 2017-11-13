@@ -1,24 +1,43 @@
-body {
-  background-color: #fbc547;
-  color: #333;
-  font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", "Avenir",
-    "Segoe UI", "Lucida Grande", "Helvetica Neue", "Helvetica", "Fira Sans",
-    "Roboto", "Noto", "Droid Sans", "Cantarell", "Oxygen", "Ubuntu",
-    "Franklin Gothic Medium", "Century Gothic", "Liberation Sans", sans-serif;
-  padding: 18vh 1rem;
-  text-align: center;
-}
+// TOOLS
+// variables............................
+//
+// BASE
+// reset................................
+// body.................................
+// layout...............................
+//
+// PATTERNS
+// typography...........................
+// syntax...............................
+// media................................
+// buttons..............................
+//
+// AREAS
+// header...............................
+// main.................................
+// sidebar..............................
+// footer...............................
+//
+// PAGES
+// archive..............................
 
-a {
-  color: rgba(#000, 0.7);
+@charset "UTF-8";
 
-  &:focus,
-  &:hover {
-    color: rgba(#000, 0.6);
-  }
-}
+@import "partials/tools.variables";
 
-.middleman-logo {
-  margin-bottom: 1rem;
-  width: 10rem;
-}
+@import "partials/base.reset";
+@import "partials/base.body";
+@import "partials/base.layout";
+
+@import "partials/patterns.typography";
+@import "partials/patterns.syntax";
+@import "partials/patterns.media";
+@import "partials/patterns.buttons";
+
+@import "partials/areas.header";
+@import "partials/areas.main";
+@import "partials/areas.pagination";
+@import "partials/areas.sidebar";
+@import "partials/areas.footer";
+
+@import "partials/pages.archive";

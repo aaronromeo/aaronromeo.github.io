@@ -21,7 +21,8 @@ page '/*.txt', layout: false
 ###
 
 set :markdown_engine, :redcarpet
-set :markdown, :fenced_code_blocks => true, :smartypants => true
+set :markdown, fenced_code_blocks: true, footnotes: true, highlight: true,
+               link_attributes: { rel: 'nofollow' }, smartypants: true
 
 activate :blog do |blog|
   # This will add a prefix to all links, template references and source paths
@@ -43,12 +44,13 @@ activate :blog do |blog|
   blog.calendar_template = "calendar.html"
 
   # Enable pagination
-  # blog.paginate = true
-  # blog.per_page = 10
+  blog.paginate = true
+  blog.per_page = 10
   # blog.page_link = "page/{num}"
 end
 
-activate :syntax
+activate :syntax, line_numbers: true, inline_theme: Rouge::Themes::Github.new
+activate :directory_indexes
 
 page "/feed.xml", layout: false
 # Reload the browser automatically whenever files change
@@ -56,18 +58,12 @@ configure :development do
   activate :livereload
 end
 
-# Methods defined in the helpers block are available in templates
-# helpers do
-#   def some_helper
-#     "Helping"
-#   end
-# end
+require "lib/aaron_romeo_helpers"
+helpers AaronRomeoHelpers
 
 # Build-specific configuration
 configure :build do
-  # Minify CSS on build
-  # activate :minify_css
-
-  # Minify Javascript on build
-  # activate :minify_javascript
+  activate :asset_hash
+  activate :minify_css
+  activate :minify_javascript
 end
