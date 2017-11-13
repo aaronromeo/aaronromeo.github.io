@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>&gt; aaronromeo.com: s3</title>
+  <subtitle>Posts tagged with s3</subtitle>
+  <id>http://aaronromeo.com</id>
+  <link href="http://aaronromeo.com"/>
+  <link href="http://aaronromeo.com/tag/s3/feed.xml" rel="self"/>
+  <updated>2014-05-04T04:09:00-04:00</updated>
+  <author>
+    <name>Aaron Romeo</name>
+  </author>
+  <entry>
+    <title>Storing images (or files) on S3 with Django</title>
+    <link rel="alternate" href="http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/"/>
+    <id>http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/</id>
+    <published>2014-05-04T04:09:00-04:00</published>
+    <updated>2017-11-13T07:14:20-05:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which isn’t a good idea in most cases) or upload it to a server/service which specializes in delivering you content</summary>
+  </entry>
+</feed>
