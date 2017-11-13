@@ -9,18 +9,8 @@
     <title><%= current_page.data.title || "Middleman" %></title>
     <%= stylesheet_link_tag "site" %>
     <%= javascript_include_tag "site" %>
-    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Bitter:400,400i,700' %>
   </head>
   <body>
-    <%= partial 'partials/header' %>
-
-    <div class="container">
-      <div class="wrapper">
-        <div class="main">
-          <%= yield %>
-        </div>
-
-      </div>
-    </div>
+    <%= yield %>
   </body>
 </html>
