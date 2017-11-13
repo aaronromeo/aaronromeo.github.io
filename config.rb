@@ -1,84 +1,73 @@
-# Theme configuration
-config[:silverback] = {
-  blog: {
-    # The full URL to your site (used in the RSS feed and sitemap)
-    url: 'http://aaronromeo.com',
-    # Your blog's title (used in the title meta and in the header)
-    title: '> aaronromeo.com',
-    # Your blog's subtitle (used in the description meta and in the header)
-    subtitle: 'All of this copy can be changed in the config.rb file.',
-    # The URL linked to in the header (leave as-is unless your site isn't at the
-    # root of your domain)
-    home_url: '/',
-    # The path to the image you want to use in the header
-    avatar_url: '/images/avatar.jpg',
-    # Options for the description in the sidebar
-    sidebar_show_description: true,
-    sidebar_description_prefix: '👋',
-    description: 'Middleman Silverback is a theme created by Elliot Jackson. You
-    can download it and read the docs
-    <a href="https://github.com/elliotekj/middleman-silverback">here</a>.',
-    # Options for the articles list in the sidebar
-    sidebar_show_articles: true,
-    sidebar_articles_prefix: '✏️',
-    # Options for the archive links in the sidebar
-    sidebar_show_archives: true,
-    sidebar_archives_prefix: '📂',
-    # Your name (used in the post meta)
-    author: 'Elliot Jackson',
-    # The text you want in the read more buttons
-    read_more_text: 'Read the rest...',
-    # The text you want for the pagination links
-    pagination_next_text: 'Older posts',
-    pagination_prev_text: 'Newer posts',
-    # The text you want to show in the footer
-    footer_text: 'This is some sample footer text.'
-  }
-}
+###
+# Page options, layouts, aliases and proxies
+###
 
-# Specify layouts
-page '/*.html', layout: 'layouts/body'
-page '/feed.xml', layout: false
+# Per-page layout changes:
+#
+# With no layout
+page '/*.xml', layout: false
+page '/*.json', layout: false
+page '/*.txt', layout: false
 
-# Markdown configuration
+# With alternative layout
+# page "/path/to/file.html", layout: :otherlayout
+
+# Proxy pages (http://middlemanapp.com/basics/dynamic-pages/)
+# proxy "/this-page-has-no-template.html", "/template-file.html", locals: {
+#  which_fake_page: "Rendering a fake page with a local variable" }
+
+###
+# Helpers
+###
+
 set :markdown_engine, :redcarpet
-set :markdown, fenced_code_blocks: true, footnotes: true, highlight: true,
-               link_attributes: { rel: 'nofollow' }, smartypants: true
+set :markdown, :fenced_code_blocks => true, :smartypants => true
 
-# Autoprefix the CSS
-activate :autoprefixer
-
-# Middleman-blog configuration
 activate :blog do |blog|
-  blog.sources = 'articles/{year}-{month}-{day}-{title}.html'
-  # blog.layout = 'layout'
-  blog.summary_separator = /READMORE/
-  # blog.summary_length = 250
-  # blog.year_link = '{year}.html'
-  # blog.month_link = '{year}/{month}.html'
-  # blog.day_link = '{year}/{month}/{day}.html'
-  # blog.default_extension = '.markdown'
+  # This will add a prefix to all links, template references and source paths
+  # blog.prefix = "blog"
 
-  blog.calendar_template = 'calendar.html'
+  # blog.permalink = "{year}/{month}/{day}/{title}.html"
+  # Matcher for blog source files
+  # blog.sources = "{year}-{month}-{day}-{title}.html"
+  # blog.taglink = "tags/{tag}.html"
+  # blog.layout = "layout"
+  # blog.summary_separator = /(READMORE)/
+  # blog.summary_length = 250
+  # blog.year_link = "{year}.html"
+  # blog.month_link = "{year}/{month}.html"
+  # blog.day_link = "{year}/{month}/{day}.html"
+  # blog.default_extension = ".markdown"
+
+  blog.tag_template = "tag.html"
+  blog.calendar_template = "calendar.html"
 
   # Enable pagination
-  blog.paginate = true
+  # blog.paginate = true
   # blog.per_page = 10
-  # blog.page_link = 'page/{num}'
+  # blog.page_link = "page/{num}"
 end
 
-# Use pretty URLs
-activate :directory_indexes
+activate :syntax
 
-# Middleman-syntax configuration
-activate :syntax, line_numbers: true
-
+page "/feed.xml", layout: false
+# Reload the browser automatically whenever files change
 configure :development do
   activate :livereload
 end
 
+# Methods defined in the helpers block are available in templates
+# helpers do
+#   def some_helper
+#     "Helping"
+#   end
+# end
+
+# Build-specific configuration
 configure :build do
-  activate :asset_hash
-  activate :minify_css
-  activate :minify_javascript
+  # Minify CSS on build
+  # activate :minify_css
+
+  # Minify Javascript on build
+  # activate :minify_javascript
 end
