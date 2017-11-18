@@ -8,8 +8,6 @@ summary: Jest snapshot within Rails Webpacker
 layout: post
 ---
 
-# Preable
-
 Ah... The state of the Rails ecosystem couldn't be better for me. With the supplementing of the asset pipeline with [Webpacker](https://github.com/rails/webpacker) the world of Javascript development has joined nicely with the world of Rails development.
 
 If you are like me and using ReactJS as your staple JS view layer, you probably know of the testing tool [Jest](https://facebook.github.io/jest/) also created by the smart people at Facebook. This short tutorial assumes you have Webpacker and ReactJS running and you want to get setup with Jest.
