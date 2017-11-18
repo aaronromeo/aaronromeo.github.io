@@ -5,31 +5,40 @@
   <id>http://aaronromeo.com</id>
   <link href="http://aaronromeo.com"/>
   <link href="http://aaronromeo.com/feed.xml" rel="self"/>
-  <updated>2017-11-12T15:44:00-05:00</updated>
+  <updated>2017-11-18T07:26:00-05:00</updated>
   <author>
     <name>Aaron Romeo</name>
   </author>
+  <entry>
+    <title>Namespacing localhost with subdomains</title>
+    <link rel="alternate" href="http://aaronromeo.com/2017/11/18/managing-localhost-states/"/>
+    <id>http://aaronromeo.com/2017/11/18/managing-localhost-states/</id>
+    <published>2017-11-18T07:26:00-05:00</published>
+    <updated>2017-11-18T07:39:43-05:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">When developing locally, it’s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is because all your cookies in your local development tend to share the same namespace localhost:{port} (where {port</summary>
+  </entry>
   <entry>
     <title>Jest Snapshot testing within Rails Webpacker</title>
     <link rel="alternate" href="http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/"/>
     <id>http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/</id>
     <published>2017-11-12T15:44:00-05:00</published>
-    <updated>2017-11-13T07:46:09-05:00</updated>
+    <updated>2017-11-18T07:27:18-05:00</updated>
     <author>
       <name>Aaron Romeo</name>
     </author>
-    <summary type="html">Preable
+    <summary type="html">Ah… The state of the Rails ecosystem couldn’t be better for me. With the supplementing of the asset pipeline with Webpacker the world of Javascript development has joined nicely with the world of Rails development.
 
-Ah… The state of the Rails ecosystem couldn’t be better for me. With the supplementing of the asset pipeline with Webpacker the world of Javascript development has joined nicely with the world of Rails development.
-
-If you are like me and using</summary>
+If you are like me and using ReactJS</summary>
   </entry>
   <entry>
     <title>Storing images (or files) on S3 with Django</title>
     <link rel="alternate" href="http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/"/>
     <id>http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/</id>
     <published>2014-05-04T04:09:00-04:00</published>
-    <updated>2017-11-13T07:46:09-05:00</updated>
+    <updated>2017-11-18T07:25:32-05:00</updated>
     <author>
       <name>Aaron Romeo</name>
     </author>

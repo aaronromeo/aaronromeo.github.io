@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>&gt; aaronromeo.com: localhost</title>
+  <subtitle>Posts tagged with localhost</subtitle>
+  <id>http://aaronromeo.com</id>
+  <link href="http://aaronromeo.com"/>
+  <link href="http://aaronromeo.com/tag/localhost/feed.xml" rel="self"/>
+  <updated>2017-11-18T07:26:00-05:00</updated>
+  <author>
+    <name>Aaron Romeo</name>
+  </author>
+  <entry>
+    <title>Namespacing localhost with subdomains</title>
+    <link rel="alternate" href="http://aaronromeo.com/2017/11/18/managing-localhost-states/"/>
+    <id>http://aaronromeo.com/2017/11/18/managing-localhost-states/</id>
+    <published>2017-11-18T07:26:00-05:00</published>
+    <updated>2017-11-18T07:39:43-05:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">When developing locally, it’s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is because all your cookies in your local development tend to share the same namespace localhost:{port} (where {port</summary>
+  </entry>
+</feed>
