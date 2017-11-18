@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>> aaronromeo.com: Namespacing localhost with subdomains</title>
+<title>> aaronromeo.com: Managing localhost states</title>
 <meta content='When developing locally, it&amp;rsquo;s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is...' name='description'>
 <meta charset='utf-8'>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
@@ -19,12 +19,12 @@
 
 <meta content='&gt; aaronromeo.com' property='og:site_name'>
 <meta content='article' property='og:type'>
-<meta content='Namespacing localhost with subdomains' property='og:title'>
+<meta content='Managing localhost states' property='og:title'>
 <meta content='When developing locally, it&amp;rsquo;s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is...' property='og:description'>
 <meta content='http://aaronromeo.com/2017/11/18/managing-localhost-states/' property='og:url'>
 <meta content='2017-11-18' property='article:published_time'>
 <meta content='summary' name='twitter:card'>
-<meta content='Namespacing localhost with subdomains' name='twitter:title'>
+<meta content='Managing localhost states' name='twitter:title'>
 <meta content='When developing locally, it&amp;rsquo;s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is...' name='twitter:description'>
 <meta content='http://aaronromeo.com/2017/11/18/managing-localhost-states/' name='twitter:url'>
 <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
@@ -48,11 +48,68 @@
 <span class='nav-cover'></span>
 
 <div class='site-wrapper'>
-<p>When developing locally, it&rsquo;s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is because all your cookies in your local development tend to share the same namespace <code>localhost:{port}</code> (where <code>{port}</code> is whatever port your framework of choice has bound to).</p>
+<header class='main-header no-cover post-head'>
+<nav class='main-nav clearfix'>
+<a class='menu-button icon-menu' href='#'>
+<span class='word'>Menu</span>
+</a>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<header class='post-header'>
+<h1 class='post-title'>Managing localhost states</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2017-11-18'>
+18 November 2017
+</time>
+on <a href='/tag/localhost/'>localhost</a>, <a href='/tag/cookies/'>cookies</a>, <a href='/tag/rails/'>rails</a>, <a href='/tag/subdomains/'>subdomains</a>
+</section>
+</header>
+<section class='post-content'><p>When developing locally, it&rsquo;s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is because all your cookies in your local development tend to share the same namespace <code>localhost:{port}</code> (where <code>{port}</code> is whatever port your framework of choice has bound to).</p>
 
 <p>To compartmentalize my localhost, I use the nifty trick of namespacing via subdomains. For example, say I&rsquo;m working on the Rails application <code>my_awesome_app</code> running on the port <code>3000</code>, I would browse to <code>http://my_awesome_app.localhost:3000/</code> rather than <code>http://localhost:3000/</code>. This keeps my cookies on the <code>my_awesome_app.localhost:3000</code>.</p>
 
 <p>If you&rsquo;re sharing cookies across a domain, then I guess that&rsquo;s another problem.</p>
+</section>
+<footer class='post-footer'>
+<figure class='author-image'>
+<a class='img' href='/author/aaron-romeo/' style='background-image: url(https://www.gravatar.com/avatar/53231b46b45f4e472ee5027d4f117ab5?size=68)'>
+<span class='hidden'>Aaron Romeo's Picture</span>
+</a>
+</figure>
+<section class='author'>
+<h4>
+<a href='/author/aaron-romeo/'>Aaron Romeo</a>
+</h4>
+<p></p>
+Read
+<a href='/author/aaron-romeo/'>more posts</a>
+by this author.
+</section>
+<section class='share'>
+<h4>Share this post</h4>
+<a class='icon-twitter' href='https://twitter.com/intent/tweet?text=Managing localhost states&amp;amp;url=http://aaronromeo.com/2017/11/18/managing-localhost-states/' onclick='window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;'>
+<span class='hidden'>Twitter</span>
+</a>
+<a class='icon-facebook' href='https://www.facebook.com/sharer/sharer.php?u=http://aaronromeo.com/2017/11/18/managing-localhost-states/' onclick='window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;'>
+<span class='hidden'>Facebook</span>
+</a>
+<a class='icon-google-plus' href='https://plus.google.com/share?url=http://aaronromeo.com/2017/11/18/managing-localhost-states/' onclick='window.open(this.href, &#39;google-plus-share&#39;, &#39;width=490,height=530&#39;);return false;'>
+<span class='hidden'>Google+</span>
+</a>
+</section>
+</footer>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover read-next-story' href='/2017/11/12/jest-snapshots-with-webpacker/'>
+<section class='post'>
+<h2>Jest Snapshot testing within Rails Webpacker</h2>
+<p>Ah&hellip; The state of the Rails ecosystem couldn&rsquo;t be better for me. With the supplementing of the asset pipeline&hellip;</p>
+</section>
+</a>
+</aside>
 
 <footer class='site-footer clearfix'>
 <section class='copyright'>
