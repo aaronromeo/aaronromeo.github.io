@@ -1,8 +1,12 @@
 ---
 
-title: Namespacing localhost with subdomains
+title: Managing localhost states
 date: 2017-11-18 12:26 UTC
+category: Rails
 tags: localhost, cookies, rails, subdomains
+authors: Aaron Romeo
+summary: Namespacing localhost with subdomains
+layout: post
 
 ---
 
