@@ -65,6 +65,7 @@ FROM ...
 
 ```
 
+
 ### Pro: Simplify Data Complexity
 
 When dealing with defaults and value overrides, a certain number of hoops need to be jumped through to keep the distinction of a default vs. user defined value. Say the developers of _AlwaysConnected_ decided to persist the default user notification preferences. In the event of the default value changing at an organizational level, there would need to be a way to differentiate between the saved default values vs the default overrides a user has set. This is often done via a flag indicating if the data is set is a default or override.
@@ -131,7 +132,10 @@ UNION ALL
 
 ### Pro: Increased performance
 
-* Results are almost immediate
+We haven't explicitly touched on when the data would refresh in this use case. It would make sense for _AlwaysConnected_ to concurrently refresh their materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user's notification preferences could end up blocking while the view is being reset. The data can be refreshed when the user
+
+
+while refreshing
 
 
 ### Pro: Simplify Abstractions
@@ -158,14 +162,7 @@ UNION ALL
 
 ### Con: View requires a unique index
 
+## Next up
 
-# A working example
-
-First off, all my code is in a sample public project at https://github.com/aaronromeo/scenic_blog_post
-
-Let's try some models to sketch a use-case.
-
-```ruby
-# Some model code here
-```
+I am working on a [post](/2019/06/10/tutorial-using-materialized-views-in-rails-and-postgresql) diving into an example of a Rails app using materialized view. Check it out over the next few weeks.
 
