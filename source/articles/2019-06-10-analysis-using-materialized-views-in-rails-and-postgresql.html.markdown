@@ -8,22 +8,22 @@ summary: Materialized views can simplify data storage, increase flexibility, sim
 layout: post
 ---
 
-Sometimes you get asked for a perfectly reasonable business request for a feature which sounds trivial. However, the simplicity of a request can often mask the complexity require to achieve the implementation as a result of the data modeling used to store the data. For example, the request might result in deduping a union join of multiple tables or it might require an unperformant query against a massive table. Part of the job of a software development architect is to allow product people to worry about the product while the architect worries about delivering the request.
+Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data modeling used to store the data vs the data modeling required to analyze the data. For example, the request might result in deduping a union join of multiple tables or it might require an unperformant query. Part of the job of a software architect is to allow product people to worry about the product while the architect worries about delivering the product.
 
-At [Timecounts](https://www.timecounts.org), concurrent materialized views have proved to be incredibly helpful with generating and backfilling data. I achieved this using the [Scenic](https://github.com/scenic-views/scenic) gem developed by the [Thoughtbot](https://thoughtbot.com/blog/announcing-scenic--versioned-database-views-for-rails) team. This is the first of a two part blog post which will highlight the pros and cons of materialized views. This will give you some idea as to whether it will work for your use case.
+At [Timecounts](https://www.timecounts.org), concurrent materialized views have proved to be incredibly helpful with generating and backfilling data. I achieved this using the [Scenic](https://github.com/scenic-views/scenic) gem developed by the [Thoughtbot](https://thoughtbot.com/blog/announcing-scenic--versioned-database-views-for-rails) team. This blog post which will highlight the pros and cons of materialized views. The goal is to give you an idea of whether it will work for your use case.
 
 
 ## What are concurrent materialized views?
 
-Feel free to skip this section if you know what I'm talking about...
+_Feel free to skip this section if you know what I'm talking about..._
 
 A bit of history. DBAs and developers long had the ability to generate a [view](https://en.wikipedia.org/wiki/View_(SQL)). A view in its most basic form is essentially a query saved to the database which would generate some results when requested. While this was great to keep logic in a central place (you could have multiple codebases executing central logic), it sucked for performance. The workaround was sometimes to drop and then create a table with the results, a.k.a. caching the results in the database. For example, say you needed to run a report every Monday you could run a cron job which executed the view and saved the results as a table. This table could then be queried during the week until it was dropped and recreated the following week.
 
-As of [Postgres 9.3](https://www.postgresql.org/docs/9.3/rules-materializedviews.html), the world was gifted with materialized views. These did the heavy lifting of dropping and creating a table with the results. Now your weekly cron job just needed to run a `REFRESH` command for your new data. No performance gains, but less boiler-plate coding. Refreshing the view resulted the view table being locked while the results were being refreshed (making the results inaccessible for a refresh).
+In the launch of [Postgres 9.3](https://www.postgresql.org/docs/9.3/rules-materializedviews.html), the world was gifted with materialized views. These did the heavy lifting of dropping and creating a table with the results. Now your weekly cron job just needed to run a `REFRESH` command for your new data. No performance gains, but less boiler-plate coding. Refreshing the view resulted in the view table being locked while the results were being refreshed (making the results inaccessible for a refresh).
 
 Finally in Postgres 9.4, the materialized view was further improved allowing the data to be refreshed concurrently, i.e. without the table being locked. The refresh is not instant (in fact it is slower to refresh a view concurrently). However, the view's data is available during the refresh.
 
-That's the back-story. Let's get into the analysis.
+Now you know the back-story. Let's get into the analysis and figure out if this baby is right for you.
 
 
 ## Pros vs. Cons
@@ -32,18 +32,18 @@ Here are things to consider to help you decide if materialized views are right f
 
 A good way of illustrating the power of materialized views is to show how it can be used with a feature which has default values set on multiple levels.
 
-Let's say that in some alternate DC universe, there is an imaginary company named _AlwaysConnected_ which is a clone of the app _Slack_. It is possible in _AlwaysConnected_ for a user's notification preferences to be set at the following three cascading levels
+Let's say that in some alternate DC universe there is an imaginary company named _AlwaysConnected_. _AlwaysConnected_ is a clone of the app _Slack_. It is possible in _AlwaysConnected_ for a user's notification preferences to be set at the following three cascading levels
 
 1. At an application level (via the defaults the _AlwaysConnected_ developers might set for their user)
 1. At an organization level (via what a user has set for each of the _AlwaysConnected_ organizations they are associated to)
 1. At a channel level (for all the channels a user is in within an _AlwaysConnected_ organization)
 
-Keep in mind that a user's settings for a channel supersede the settings for an organization which supersede the default app settings.
+Keep in mind that a user's settings for a channel supersede the settings for an organization which supersede the default application settings.
 
 
 ### Pro: Flexibility
 
-A materialized view can be used to generate an user's final setting for a channel. This allows the flexibility of being able to change default settings at as product level without needing to backfill data. Additionally it makes it possible to create a new notification preference setting without worrying about a backfill.
+A materialized view can be used to generate an user's final notification setting for a channel. This allows the flexibility of being able to change default settings at as product level without needing to backfill data. Additionally it makes it possible to create a new notification preference setting without worrying about a backfill.
 
 A naive approach would be to create a setting for each permutation and pre-populate the results for each case. The downside to this is changing any preference or default results in a costly update. Chances are a change to defaults would require a data migration. Generally data migrations are more difficult to verify, harder to scale and expose an application to increased deadlocks.
 
