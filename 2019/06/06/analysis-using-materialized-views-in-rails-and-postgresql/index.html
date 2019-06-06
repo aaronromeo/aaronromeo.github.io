@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>> aaronromeo.com: Analysis - Using materialized views in Rails and PostgreSQL</title>
-<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can oft...' name='description'>
+<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sound trivial on the surface. However, the simplicity of a request can ofte...' name='description'>
 <meta charset='utf-8'>
 <meta content='width=device-width, initial-scale=1.0' name='viewport'>
 <meta content='IE=edge' http-equiv='X-UA-Compatible'>
@@ -20,13 +20,13 @@
 <meta content='&gt; aaronromeo.com' property='og:site_name'>
 <meta content='article' property='og:type'>
 <meta content='Analysis - Using materialized views in Rails and PostgreSQL' property='og:title'>
-<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can oft...' property='og:description'>
+<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sound trivial on the surface. However, the simplicity of a request can ofte...' property='og:description'>
 <meta content='http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/' property='og:url'>
 <meta content='2019-06-06' property='article:published_time'>
 <meta content='summary' name='twitter:card'>
 <meta content='tweetsfromaaron' name='twitter:site'>
 <meta content='Analysis - Using materialized views in Rails and PostgreSQL' name='twitter:title'>
-<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can oft...' name='twitter:description'>
+<meta content='Sometimes you get asked for a perfectly reasonable feature. It might sound trivial on the surface. However, the simplicity of a request can ofte...' name='twitter:description'>
 <meta content='http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/' name='twitter:url'>
 <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
 <link href="/images/favicon.ico" rel="icon" type="image/ico" />
@@ -81,9 +81,9 @@
 on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='/tag/postgres/'>postgres</a>, <a href='/tag/postgresql/'>postgresql</a>
 </section>
 </header>
-<section class='post-content'><p>Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data modeling used to store the data vs the data modeling required to analyze the data. For example, the request might result in deduping a union join of multiple tables or it might require an unperformant query. Part of the job of a software architect is to allow product people to worry about the product while the architect worries about delivering the product.</p>
+<section class='post-content'><p>Sometimes you get asked for a perfectly reasonable feature. It might sound trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data modelling used to store the data vs the data modelling required to analyze the data. For example, the request might result in deduping a union join of multiple tables or it might require a poorly performant query. Part of the job of a software architect is to allow product people to worry about the product while the architect worries about delivering the product.</p>
 
-<p>At <a href="https://www.timecounts.org" rel="nofollow">Timecounts</a>, concurrent materialized views have proved to be incredibly helpful with generating and backfilling data. I achieved this using the <a href="https://github.com/scenic-views/scenic" rel="nofollow">Scenic</a> gem developed by the <a href="https://thoughtbot.com/blog/announcing-scenic--versioned-database-views-for-rails" rel="nofollow">Thoughtbot</a> team. This blog post which will highlight the pros and cons of materialized views. The goal is to give you an idea of whether it will work for your use case.</p>
+<p>At <a href="https://www.timecounts.org" rel="nofollow">Timecounts</a>, concurrent materialized views have proved to be incredibly helpful with generating and backfilling data. I achieved this using the <a href="https://github.com/scenic-views/scenic" rel="nofollow">Scenic</a> gem developed by the <a href="https://thoughtbot.com/blog/announcing-scenic--versioned-database-views-for-rails" rel="nofollow">Thoughtbot</a> team. This blog post will highlight the pros and cons of materialized views. The goal is to give you an idea of whether it will work for your use case.</p>
 
 <h2>What are concurrent materialized views?</h2>
 
@@ -93,7 +93,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 
 <p>In the launch of <a href="https://www.postgresql.org/docs/9.3/rules-materializedviews.html" rel="nofollow">Postgres 9.3</a>, the world was gifted with materialized views. These did the heavy lifting of dropping and creating a table with the results. Now your weekly cron job just needed to run a <code>REFRESH</code> command for your new data. No performance gains, but less boiler-plate coding. Refreshing the view resulted in the view table being locked while the results were being refreshed (making the results inaccessible for a refresh).</p>
 
-<p>Finally in Postgres 9.4, the materialized view was further improved allowing the data to be refreshed concurrently, i.e. without the table being locked. The refresh is not instant (in fact it is slower to refresh a view concurrently). However, the view&rsquo;s data is available during the refresh.</p>
+<p>Finally, in Postgres 9.4, the materialized view was further improved allowing the data to be refreshed concurrently, i.e. without the table being locked. The refresh is not instant (in fact it is slower to refresh a view concurrently). However, the view&rsquo;s data is available during the refresh.</p>
 
 <p>Now you know the back-story. Let&rsquo;s get into the analysis and figure out if this baby is right for you.</p>
 
@@ -107,7 +107,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 
 <ol>
 <li>At an application level (via the defaults the <em>AlwaysConnected</em> developers might set for their user)</li>
-<li>At an organization level (via what a user has set for each of the <em>AlwaysConnected</em> organizations they are associated to)</li>
+<li>At an organization level (via what a user has set for each of the <em>AlwaysConnected</em> organizations they are associated with)</li>
 <li>At a channel level (for all the channels a user is in within an <em>AlwaysConnected</em> organization)</li>
 </ol>
 
@@ -115,9 +115,9 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 
 <h3>Pro: Flexibility</h3>
 
-<p>A materialized view can be used to generate an user&rsquo;s final notification setting for a channel. This allows the flexibility of being able to change default settings at as product level without needing to backfill data. Additionally it makes it possible to create a new notification preference setting without worrying about a backfill.</p>
+<p>A materialized view can be used to generate a user&rsquo;s final notification setting for a channel. This allows the flexibility of being able to change default settings at a product level without needing to backfill data. Additionally, it makes it possible to create a new notification preference setting without worrying about a backfill.</p>
 
-<p>A naive approach would be to create a setting for each permutation and pre-populate the results for each case. The downside to this is changing any preference or default results in a costly update. Chances are a change to defaults would require a data migration. Generally data migrations are more difficult to verify, harder to scale and expose an application to increased deadlocks.</p>
+<p>A naive approach would be to create a setting for each permutation and pre-populate the results for each case. The downside to this is changing any preference or default results in a costly update. Chances are a change to defaults would require a data migration. Generally, data migrations are more difficult to verify, harder to scale and expose an application to increased deadlocks.</p>
 
 <p>Concurrent materialized views allow these preferences to be generated with the defaults inserted at the time of computation. Going back to the use case of <em>AlwaysConnected</em>, the default application level might be to immediately notify a user when a user messages a channel. This can easily be changed and almost instantly by changing the definition of the materialized view at an app level.</p>
 <div class="highlight"><pre class="highlight sql"><code>
@@ -136,7 +136,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 </code></pre></div>
 <h3>Pro: Simplify Data Complexity</h3>
 
-<p>When dealing with defaults and value overrides, a certain number of hoops need to be jumped through to keep the distinction of a default vs. user defined value. Say the developers of <em>AlwaysConnected</em> decided to persist the default user notification preferences. In the event of the default value changing at an organizational level, there would need to be a way to differentiate between the saved default values vs the default overrides a user has set. This is often done via a flag indicating if the data is set is a default or override.</p>
+<p>When dealing with defaults and value overrides, a certain number of hoops need to be jumped through to keep the distinction of default vs. user-defined value. Say the developers of <em>AlwaysConnected</em> decided to persist the default user notification preferences. In the event of the default value changing at an organizational level, there would need to be a way to differentiate between the saved default values vs the default overrides a user has set. This is often done via a flag indicating if the data is set is default or override.</p>
 
 <p>As is shown in the code snippet above, this is much easier with materialized views as the default data isn&rsquo;t persisted. It would be possible to store all user overrides in a table similar to the one below</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">user_notification_preferences</span> <span class="p">(</span>
@@ -150,7 +150,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
     <span class="n">updated_at</span> <span class="k">timestamp</span> <span class="k">without</span> <span class="n">time</span> <span class="k">zone</span> <span class="k">NOT</span> <span class="k">NULL</span>
 <span class="p">);</span>
 </code></pre></div>
-<p>In this case the <code>settable_type</code> is set to either <code>Channel</code> or <code>Organization</code> and the <code>settable_id</code> would be the <code>id</code> of entity depending on what user preference is set. If a setting doesn&rsquo;t exist for a level, the default setting for the next level is applied (i.e. if no channel setting override exists, the organization setting override is applied).</p>
+<p>In this case, the <code>settable_type</code> is set to either <code>Channel</code> or <code>Organization</code> and the <code>settable_id</code> would be the <code>id</code> of entity depending on what user preference is set. If a setting doesn&rsquo;t exist for a level, the default setting for the next level is applied (i.e. if no channel setting override exists, the organization setting override is applied).</p>
 
 <p>To expand on the earlier examples, a materialized view for the notification settings might look like the following snippet.</p>
 <div class="highlight"><pre class="highlight sql"><code>
@@ -195,7 +195,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 
 <p>We haven&rsquo;t explicitly touched on when the data would refresh in this use case. It would make sense for <em>AlwaysConnected</em> to concurrently refresh its materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user&rsquo;s notification preferences could end up blocking read requests while the view is being refreshed. Since the view data is depending on data defined by other models (like the <code>User</code>&lsquo;s notification preferences for the <code>Channel</code> or <code>Organization</code>), the view&rsquo;s data can refresh when the user&rsquo;s notification preferences are updated. It is also possible to have the materialized data refresh every few seconds or minutes based on the use case.</p>
 
-<p>One of the things I like doing (depending on the use case) is having the view update once it having the view refresh once it has completed. Using the Delayed Job and Scenic (more on them later), I will requeue the refresh from the <code>success</code> method of the job.</p>
+<p>One of the things I like doing (depending on the use case) is having the view update once it having the view refresh once it has completed. Using the Delayed Job and Scenic (more on them later), I will re-queue the refresh from the <code>success</code> method of the job.</p>
 <div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">RefreshViewJob</span>
   <span class="c1"># ... code outside the scope of this use case</span>
   <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
@@ -205,7 +205,7 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 <span class="k">end</span>
 
 </code></pre></div>
-<p>Once the view data has been refreshed, the performance of read requests are no different than reads from any other table. Additionally, it is possible to add indexes to columns within the view. For instance, say you want to look up a <code>notification frequency</code> by the <code>user</code> and <code>notification_type</code>, the following index might make sense.</p>
+<p>Once the view data has been refreshed, the performance of read requests is no different than reads from any other table. Additionally, it is possible to add indexes to columns within the view. For instance, say you want to look up a <code>notification frequency</code> by the <code>user</code> and <code>notification_type</code>, the following index might make sense.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">backfilled_notification_preferences_lookup</span>
           <span class="k">ON</span> <span class="k">public</span><span class="p">.</span><span class="n">backfilled_notification_preferences</span>
        <span class="k">USING</span> <span class="n">btree</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">notification_type</span><span class="p">);</span>
@@ -218,9 +218,9 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 <p>Ben Porterfield, Founder and VP of Engineering at Looker</p>
 </blockquote>
 
-<p>Think back to the times you have seen code which pulls together bits of data, manipulates it and then formats it on the fly? Often this is done over multiple objects and functions, leaving a future developer with a nightmare of troubleshooting. I could rant about this forever, but I&rsquo;m a firm believer that the best developers are developers who create readable code. Code with high cyclomatic complexity is more indicative of generally poor code than high developer intelligence.</p>
+<p>Think back to the times you have seen logic which pulls together bits of data, manipulates it and then formats it on the fly? Often this is done over multiple objects and functions, leaving a future developer with a nightmare of troubleshooting. I could rant about this forever, but I&rsquo;m a firm believer that the best developers are developers who create readable code. Code with high cyclomatic complexity is more indicative of generally poor code than high developer intelligence.</p>
 
-<p>As a result this is an area that I believe really allows views to shine. The data that is gathered and displayed in a view is generally considerably more readable and concise. In the case of the <code>backfilled_notification_preferences</code>, the data for a user might look like the following.</p>
+<p>As a result, this is an area that I believe really allows views to shine. The data that is gathered and displayed in a view is generally considered more readable and concise. In the case of the <code>backfilled_notification_preferences</code>, the data for a user might look like the following.</p>
 
 <table><thead>
 <tr>
@@ -274,21 +274,21 @@ on <a href='/tag/rails/'>rails</a>, <a href='/tag/scenic/'>scenic</a>, <a href='
 
 <h3>Con: Setup complexity</h3>
 
-<p>As is pretty obvious by now, is that setting up materialized views can require a decent amount of overhead plumbing. While the refresh can be handled with database triggers, I am currently using materialized views within a Rails app. Adding database triggers limit testability as a result of requiring a transaction to be committed and limiting the stubbing of data. As a result my project requires a few prerequisites.</p>
+<p>As is pretty obvious by now, is that setting up materialized views can require a decent amount of overhead plumbing. While the refresh can be handled with database triggers, I am currently using materialized views within a Rails app. Adding database triggers limit testability as a result of requiring a transaction to be committed and limiting the stubbing of data. As a result, my project requires a few prerequisites.</p>
 
 <ul>
-<li>A job queue (using <a href="https://github.com/collectiveidea/delayed_job" rel="nofollow">Delayed Job</a>) - Refreshing a view within the request response cycle would negate many of the performance gains. As a result I am refreshing the view in the background.</li>
+<li>A job queue (using <a href="https://github.com/collectiveidea/delayed_job" rel="nofollow">Delayed Job</a>) - Refreshing a view within the request-response cycle would negate many of the performance gains. As a result, I am refreshing the view in the background.</li>
 <li>An ORM view manager (using <a href="https://github.com/scenic-views/scenic" rel="nofollow">Scenic</a>) - Ideally you want a tool which abstracts away much if the migration and ORM tie-ins.</li>
 <li>Postgres 9.4. or greater</li>
 </ul>
 
-<h3>Con: The delay in data population</h3>
+<h3>Con: The delay in the data being populated</h3>
 
-<p>Unfortunately data doesn&rsquo;t populate instantly into the materialized view. How long this take really depends on the complexity of the query and the amount of data. My point that if you need your data to always be immediate and accurate without a lag, this might not work for your use-case. However, I will say, in many cases, the need for instant data can be mitigated by explaining to the end-user that their change might take a few minutes to propagate.</p>
+<p>Unfortunately, data doesn&rsquo;t populate instantly into the materialized view. How long this take really depends on the complexity of the query and the amount of data. My point that if you need your data to always be immediate and accurate without a lag, this might not work for your use-case. However, I will say, in many cases, the need for instant data can be mitigated by explaining to the end-user that their change might take a few minutes to propagate.</p>
 
 <h3>Con: Database performance</h3>
 
-<p>Running a query constantly against a database adds to more heavy-lifting done by the database. However, this also ties up database cycles. This can be reduced by reducing the refresh rate of the view. Alternatively you can chuck gold bars at it and get a more powerful DB. More complex solutions might involve sharding data or creating read-replicas however this just adds additional lag to the delay in data population.</p>
+<p>Running a query constantly against a database adds to more heavy-lifting done by the database. However, this also ties up database cycles. This can be reduced by reducing the refresh rate of the view. Alternatively, you can chuck gold bars at it and get a more powerful DB. More complex solutions might involve sharding data or creating read-replicas however this just adds additional lag to the delay in data population.</p>
 
 <h3>Con: View requires a unique index</h3>
 

@@ -25,11 +25,11 @@
     <link rel="alternate" href="http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/"/>
     <id>http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/</id>
     <published>2019-06-05T20:00:00-04:00</published>
-    <updated>2019-06-06T12:39:52-04:00</updated>
+    <updated>2019-06-06T13:12:21-04:00</updated>
     <author>
       <name>Aaron Romeo</name>
     </author>
-    <summary type="html">Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data</summary>
+    <summary type="html">Sometimes you get asked for a perfectly reasonable feature. It might sound trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data</summary>
   </entry>
   <entry>
     <title>Jest Snapshot testing within Rails Webpacker</title>
