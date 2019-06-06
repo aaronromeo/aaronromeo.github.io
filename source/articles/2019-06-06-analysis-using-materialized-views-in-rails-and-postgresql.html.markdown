@@ -1,7 +1,7 @@
 ---
 
 title: Analysis - Using materialized views in Rails and PostgreSQL
-date: 2019-06-10 00:00 UTC
+date: 2019-06-06 00:00 UTC
 category: Rails
 tags: rails, scenic, postgres, postgresql
 authors: Aaron Romeo
