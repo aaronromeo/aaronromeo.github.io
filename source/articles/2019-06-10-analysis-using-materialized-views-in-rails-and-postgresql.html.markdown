@@ -1,6 +1,6 @@
 ---
 title: Analysis - Using materialized views in Rails and PostgreSQL
-date: 2019-05-22 00:00 UTC
+date: 2019-06-10 00:00 UTC
 category: Rails
 tags: rails, scenic, postgres, postgresql
 authors: Aaron Romeo
@@ -133,7 +133,20 @@ UNION ALL
 
 ### Pro: Increased performance
 
-We haven't explicitly touched on when the data would refresh in this use case. It would make sense for _AlwaysConnected_ to concurrently refresh its materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user's notification preferences could end up blocking read requests while the view is being refreshed. Since the view data is depending on data defined by other models (like the `User`'s notification preferences for the `Channel` or `Organization`), the view's data can refresh when the user's notification preferences are updated.
+We haven't explicitly touched on when the data would refresh in this use case. It would make sense for _AlwaysConnected_ to concurrently refresh its materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user's notification preferences could end up blocking read requests while the view is being refreshed. Since the view data is depending on data defined by other models (like the `User`'s notification preferences for the `Channel` or `Organization`), the view's data can refresh when the user's notification preferences are updated. It is also possible to have the materialized data refresh every few seconds or minutes based on the use case.
+
+One of the things I like doing (depending on the use case) is having the view update once it having the view refresh once it has completed. Using the Delayed Job and Scenic (more on them later), I will requeue the refresh from the `success` method of the job.
+
+```ruby
+class RefreshViewJob
+  # ... code outside the scope of this use case
+  def success(*)
+    Delayed::Job.enqueue payload_object: RefreshViewJob.new, run_at: 5.minutes.from_now
+  end
+  # ... code outside the scope of this use case
+end
+
+```
 
 Once the view data has been refreshed, the performance of read requests are no different than reads from any other table. Additionally, it is possible to add indexes to columns within the view. For instance, say you want to look up a `notification frequency` by the `user` and `notification_type`, the following index might make sense.
 
@@ -179,13 +192,17 @@ As is pretty obvious by now, is that setting up materialized views can require a
 
 ### Con: The delay in data population
 
-* Accessing data before the refresh
+Unfortunately data doesn't populate instantly into the materialized view. How long this take really depends on the complexity of the query and the amount of data. My point that if you need your data to always be immediate and accurate without a lag, this might not work for your use-case. However, I will say, in many cases, the need for instant data can be mitigated by explaining to the end-user that their change might take a few minutes to propagate.
+
 
 ### Con: Database performance
+
+Running a query constantly against a database adds to more heavy-lifting done by the database. However, this also ties up database cycles. This can be reduced by reducing the refresh rate of the view. Alternatively you can chuck gold bars at it and get a more powerful DB. More complex solutions might involve sharding data or creating read-replicas however this just adds additional lag to the delay in data population.
 
 
 ### Con: View requires a unique index
 
+Last but not least... Materialized views require a unique index for concurrent refreshes. This can be a combination of fields (like the following) if you don't have a field like an `id`.
 
 ```sql
 CREATE UNIQUE INDEX backfilled_notification_preferences_uniq
@@ -193,7 +210,16 @@ CREATE UNIQUE INDEX backfilled_notification_preferences_uniq
               USING btree (user_id, notification_type, settable_id, settable_type);
 ```
 
-## Next up
+However, nothing is stopping you from constructing an ID based on a combination of fields that you know to be unique...
+
+```sql
+SELECT concat(table01.id, ':', table02.id, ':', table03.id) AS id
+    ...
+```
+
+## Wrap up
+
+If you made it this far, that you very much. I'd love feedback. How can this be improved? Are there areas you would have liked more information about? Anything else?
 
 I am working on a [post](/2019/06/10/tutorial-using-materialized-views-in-rails-and-postgresql) diving into an example of a Rails app using materialized view. Check it out over the next few weeks.
 
