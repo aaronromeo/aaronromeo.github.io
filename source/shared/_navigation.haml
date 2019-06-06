@@ -8,5 +8,11 @@
       - css_class << "nav-current" if current_page.url == href
       %li{class: css_class.join(' ')}
         %a{href: href}= label
+  %ul
+    - blog.articles.try(:each) do |article|
+      - css_class = %W(nav-#{article.title.parameterize})
+      - css_class << "nav-current" if current_page.url == article.url
+      %li{class: css_class.join(' ')}
+        %a{href: article.url}= article.title
   %a.subscribe-button.icon-feed{href: feed_path} Subscribe
 %span.nav-cover

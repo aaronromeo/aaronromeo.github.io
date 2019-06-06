@@ -6,7 +6,7 @@ tags: rails, scenic, postgres, postgresql
 authors: Aaron Romeo
 summary: Building a Rails app that utilizes Materialized Views via Scenic and Postgres.
 layout: post
-published: true
+published: false
 ---
 
 # A working example

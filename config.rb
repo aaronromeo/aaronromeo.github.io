@@ -14,10 +14,10 @@ config[:casper] = {
   author: {
     name: 'Aaron Romeo',
     bio: nil, # Optional
-    location: nil, # Optional
-    website: nil, # Optional
+    location: "Toronto, Ontario, Canada",
+    website: "aaronromeo.com",
     gravatar_email: 'aaron.romeo@gmail.com', # Optional
-    twitter: nil # Optional
+    twitter: "tweetsfromaaron"
   },
   navigation: {
     "Home" => "/"

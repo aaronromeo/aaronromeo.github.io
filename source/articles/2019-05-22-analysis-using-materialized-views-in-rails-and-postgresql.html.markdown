@@ -97,8 +97,8 @@ SELECT
     users.id AS user_id,
     'new_channel_message' AS notification_type,
     COALESCE(
-        channel_user_notification_preferences.notification_frequency,
-        organization_user_notification_preferences.notification_frequency,
+        cu_notification_preferences.notification_frequency,
+        ou_notification_preferences.notification_frequency,
         'immediately'
     ) AS notification_frequency,
     channels.id AS channel_id
@@ -111,45 +111,69 @@ JOIN organizations
 ON (
   users.organization_id = organizations.id
 )
-LEFT JOIN user_notification_preferences AS channel_user_notification_preferences
+LEFT JOIN user_notification_preferences AS cu_notification_preferences
 ON (
-    channel_user_notification_preferences.settable_id = channels.id
-    AND channel_user_notification_preferences.settable_type = 'Channel'
-    AND channel_user_notification_preferences.notification_type = 'new_channel_message'
-    AND channel_user_notification_preferences.user_id = users.id
+    cu_notification_preferences.settable_id = channels.id
+    AND cu_notification_preferences.settable_type = 'Channel'
+    AND cu_notification_preferences.notification_type = 'new_channel_message'
+    AND cu_notification_preferences.user_id = users.id
 )
-LEFT JOIN user_notification_preferences AS organization_user_notification_preferences
+LEFT JOIN user_notification_preferences AS ou_notification_preferences
 ON (
-    organization_user_notification_preferences.settable_id = channels.organization_id
-    AND organization_user_notification_preferences.settable_type = 'Organization'
-    AND organization_user_notification_preferences.notification_type = 'new_channel_message'
-    AND organization_user_notification_preferences.user_id = users.id
+    ou_notification_preferences.settable_id = channels.organization_id
+    AND ou_notification_preferences.settable_type = 'Organization'
+    AND ou_notification_preferences.notification_type = 'new_channel_message'
+    AND ou_notification_preferences.user_id = users.id
 )
 UNION ALL
 ...
 
 ```
 
+
 ### Pro: Increased performance
 
-We haven't explicitly touched on when the data would refresh in this use case. It would make sense for _AlwaysConnected_ to concurrently refresh their materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user's notification preferences could end up blocking while the view is being reset. The data can be refreshed when the user
+We haven't explicitly touched on when the data would refresh in this use case. It would make sense for _AlwaysConnected_ to concurrently refresh its materialized view because there is no saying when a new alert would go out. Without a concurrent refresh of the data, the lookup of the user's notification preferences could end up blocking read requests while the view is being refreshed. Since the view data is depending on data defined by other models (like the `User`'s notification preferences for the `Channel` or `Organization`), the view's data can refresh when the user's notification preferences are updated.
 
+Once the view data has been refreshed, the performance of read requests are no different than reads from any other table. Additionally, it is possible to add indexes to columns within the view. For instance, say you want to look up a `notification frequency` by the `user` and `notification_type`, the following index might make sense.
 
-while refreshing
+```sql
+CREATE INDEX backfilled_notification_preferences_lookup
+          ON public.backfilled_notification_preferences
+       USING btree (user_id, notification_type);
+```
 
 
 ### Pro: Simplify Abstractions
 
+> You want everyone to be able to look at the data and make sense out of it. It should be a value everyone has at your company, especially people interfacing directly with customers. There shouldn’t be any silos where engineers translate the data before handing it over to sales or customer service. That wastes precious time.
+>
+> Ben Porterfield, Founder and VP of Engineering at Looker
+
+Think back to the times you have seen code which pulls together bits of data, manipulates it and then formats it on the fly? Often this is done over multiple objects and functions, leaving a future developer with a nightmare of troubleshooting. I could rant about this forever, but I'm a firm believer that the best developers are developers who create readable code. Code with high cyclomatic complexity is more indicative of generally poor code than high developer intelligence.
+
+As a result this is an area that I believe really allows views to shine. The data that is gathered and displayed in a view is generally considerably more readable and concise. In the case of the `backfilled_notification_preferences`, the data for a user might look like the following.
+
+|user_id|notification_type     |notification_frequency|settable_id|settable_type|
+|-------|----------------------|----------------------|-----------|-------------|
+|16914  | `new_channel_message`| immediately          | 519       | Channel     |
+|16914  | `new_channel_message`| immediately          | 692       | Channel     |
+|16914  | `new_channel_message`| immediately          | 5455      | Channel     |
+|16914  | `new_channel_message`| immediately          | 405       | Channel     |
+|16914  | `new_user_message`   | daily                | 1         | Organization|
 
 
-* Default settings by joining views
-* Determining alerts by joining views
+This is considerably more readable to someone troubleshooting a problem rather than hunting down the default and override values for each level of the notification hierarchy.
+
+Furthermore, it is now possible to determine a user's alert preferences using a trivial join to either the `Channel` or `Organization` object depending on the use-case.
 
 
-### Con: The plumbing
+### Con: Setup complexity
 
-* Tools: The job queue, Postgres and Scenic
-* Rails 4 or greater
+As is pretty obvious by now, is that setting up materialized views can require a decent amount of overhead plumbing. While the refresh can be handled with database triggers, I am currently using materialized views within a Rails app. Adding database triggers limit testability as a result of requiring a transaction to be committed and limiting the stubbing of data. As a result my project requires a few prerequisites.
+
+* A job queue (using [Delayed Job](https://github.com/collectiveidea/delayed_job)) - Refreshing a view within the request response cycle would negate many of the performance gains. As a result I am refreshing the view in the background.
+* An ORM view manager (using [Scenic](https://github.com/scenic-views/scenic)) - Ideally you want a tool which abstracts away much if the migration and ORM tie-ins.
 * Postgres 9.4. or greater
 
 
@@ -161,6 +185,13 @@ while refreshing
 
 
 ### Con: View requires a unique index
+
+
+```sql
+CREATE UNIQUE INDEX backfilled_notification_preferences_uniq
+                 ON public.backfilled_notification_preferences
+              USING btree (user_id, notification_type, settable_id, settable_type);
+```
 
 ## Next up
 
