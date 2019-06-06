@@ -53,7 +53,8 @@
             %span.hidden Facebook
           %a.icon-google-plus{href: google_plus_url, onclick: "window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;"}
             %span.hidden Google+
-
+        %section.comment
+          = disqus
   %aside.read-next
     - if article_previous = current_article.article_previous
       - attributes = { href: article_previous.url }.merge(cover(article_previous))

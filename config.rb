@@ -75,6 +75,11 @@ proxy "/author/#{config.casper[:author][:name].parameterize}.html",
 # Reload the browser automatically whenever files change
 configure :development do
   activate :livereload
+
+  activate :disqus do |d|
+    # using a different shortname for production builds
+    d.shortname = "aaronromeo-com"
+  end
 end
 
 ###
@@ -145,6 +150,11 @@ configure :build do
   ignore 'javascripts/vendor/*'
   ignore 'stylesheets/_*'
   ignore 'stylesheets/vendor/*'
+
+  activate :disqus do |d|
+    # using a different shortname for production builds
+    d.shortname = "aaronromeo-com"
+  end
 end
 
 activate :deploy do |deploy|
