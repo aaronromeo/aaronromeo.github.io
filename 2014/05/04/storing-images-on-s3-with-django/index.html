@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>> aaronromeo.com: Storing images (or files) on S3 with Django</title>
+<meta content='There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async='' src='https://www.googletagmanager.com/gtag/js?id=UA-109621676-1'></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  
+  gtag('config', 'UA-109621676-1');
+</script>
+
+<meta content='&gt; aaronromeo.com' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='Storing images (or files) on S3 with Django' property='og:title'>
+<meta content='There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which...' property='og:description'>
+<meta content='http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/' property='og:url'>
+<meta content='2014-05-04' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='tweetsfromaaron' name='twitter:site'>
+<meta content='Storing images (or files) on S3 with Django' name='twitter:title'>
+<meta content='There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which...' name='twitter:description'>
+<meta content='http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/' name='twitter:url'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='nav'>
+<h3 class='nav-title'>Menu</h3>
+<a class='nav-close' href='#'>
+<span class='hidden'>Close</span>
+</a>
+<ul>
+<li class='nav-home'>
+<a href='/'>Home</a>
+</li>
+</ul>
+<ul>
+<li class='nav-analysis-using-materialized-views-in-rails-and-postgresql'>
+<a href='/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/'>Analysis - Using materialized views in Rails and PostgreSQL</a>
+</li>
+<li class='nav-managing-localhost-states'>
+<a href='/2017/11/18/managing-localhost-states/'>Managing localhost states</a>
+</li>
+<li class='nav-jest-snapshot-testing-within-rails-webpacker'>
+<a href='/2017/11/12/jest-snapshots-with-webpacker/'>Jest Snapshot testing within Rails Webpacker</a>
+</li>
+<li class='nav-storing-images-or-files-on-s3-with-django nav-current'>
+<a href='/2014/05/04/storing-images-on-s3-with-django/'>Storing images (or files) on S3 with Django</a>
+</li>
+</ul>
+<a class='subscribe-button icon-feed' href='/feed.xml'>Subscribe</a>
+</div>
+<span class='nav-cover'></span>
+
+<div class='site-wrapper'>
+<header class='main-header no-cover post-head'>
+<nav class='main-nav clearfix'>
+<a class='menu-button icon-menu' href='#'>
+<span class='word'>Menu</span>
+</a>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<header class='post-header'>
+<h1 class='post-title'>Storing images (or files) on S3 with Django</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2014-05-04'>
+04 May 2014
+</time>
+on <a href='/tag/s3/'>s3</a>, <a href='/tag/django/'>django</a>
+</section>
+</header>
+<section class='post-content'><p>There comes a time when you need to upload stuff to your server via your Django app. You can upload it to the machine serving up your app (which isn&rsquo;t a good idea in most cases) or upload it to a server/service which specializes in delivering you content. Enter S3.</p>
+
+<p>Django and S3 to play nice is pretty straightforward. This tutorial/guide/journal assumes a few things.</p>
+
+<ul>
+<li>You already have a basic Django app of somes sorts and need to add image upload functionality</li>
+<li>You know how to configure your AWS S3 account and a bucket configured</li>
+<li>Since (in my case) this is specific to images I also have <a href="http://pillow.readthedocs.org/en/latest/" rel="nofollow">Pillow</a> installed</li>
+</ul>
+
+<p>The majority of this magic is provided via two libraries</p>
+
+<ul>
+<li><a href="http://django-storages.readthedocs.org/en/latest/" rel="nofollow">django-storages</a></li>
+<li><a href="https://github.com/boto/boto" rel="nofollow">boto</a></li>
+</ul>
+
+<p>Pip install these libraries&hellip;</p>
+<div class="highlight"><pre class="highlight plaintext"><code>    pip install django-storages
+    pip install boto
+</code></pre></div>
+<p>Once you got this done, modify your <code>settings.py</code> file.</p>
+<div class="highlight"><pre class="highlight python"><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c">#...</span>
+    <span class="s">'storages'</span><span class="p">,</span>
+    <span class="c">#...</span>
+<span class="p">)</span>
+
+<span class="n">DEFAULT_FILE_STORAGE</span> <span class="o">=</span> <span class="s">'storages.backends.s3boto.S3BotoStorage'</span>
+<span class="n">AWS_S3_SECURE_URLS</span> <span class="o">=</span> <span class="bp">False</span>                                  <span class="c"># HTTP vs HTTPS</span>
+<span class="n">AWS_QUERYSTRING_AUTH</span> <span class="o">=</span> <span class="bp">False</span>                                <span class="c"># Set this to False if you do not want the file being cached as a result of a unique query string being returned for your requests</span>
+<span class="n">AWS_S3_ACCESS_KEY_ID</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'AWS_S3_ACCESS_KEY_ID'</span><span class="p">)</span>    <span class="c"># Your Amazon Web Services access key, as a string.</span>
+<span class="n">AWS_S3_SECRET_ACCESS_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'AWS_S3_SECRET_ACCESS_KEY'</span><span class="p">)</span>    <span class="c"># Your Amazon Web Services secret access key, as a string.</span>
+<span class="n">AWS_STORAGE_BUCKET_NAME</span> <span class="o">=</span> <span class="s">'yourbucketsname'</span>
+</code></pre></div>
+<p>Next modify your <code>models.py</code> file in the application you want to add this to</p>
+<div class="highlight"><pre class="highlight python"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+
+<span class="k">def</span> <span class="nf">upload_avatar_to</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">filename_base</span><span class="p">,</span> <span class="n">filename_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">s3filename</span> <span class="o">=</span> <span class="s">"profiles/{}{}{}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">first_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">filename_ext</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">s3filename</span>
+
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">upload_to</span><span class="o">=</span><span class="n">upload_avatar_to</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'{} {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">(</span><span class="s">'first_name'</span><span class="p">,</span> <span class="s">'last_name'</span><span class="p">)</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">'last_name'</span><span class="p">,</span> <span class="s">'first_name'</span><span class="p">]</span>
+
+</code></pre></div>
+<p>That is it&hellip; At this point your images will get punted to S3.</p>
+</section>
+<footer class='post-footer'>
+<figure class='author-image'>
+<a class='img' href='/author/aaron-romeo/' style='background-image: url(https://www.gravatar.com/avatar/53231b46b45f4e472ee5027d4f117ab5?size=68)'>
+<span class='hidden'>Aaron Romeo's Picture</span>
+</a>
+</figure>
+<section class='author'>
+<h4>
+<a href='/author/aaron-romeo/'>Aaron Romeo</a>
+</h4>
+<p></p>
+Read
+<a href='/author/aaron-romeo/'>more posts</a>
+by this author.
+<div class='author-meta'>
+<span class='author-location icon-location'>Toronto, Ontario, Canada</span>
+<span class='author-link icon-link'>
+<a href='aaronromeo.com'>aaronromeo.com</a>
+</span>
+</div>
+</section>
+<section class='share'>
+<h4>Share this post</h4>
+<a class='icon-twitter' href='https://twitter.com/intent/tweet?text=Storing images (or files) on S3 with Django&amp;amp;url=http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/' onclick='window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;'>
+<span class='hidden'>Twitter</span>
+</a>
+<a class='icon-facebook' href='https://www.facebook.com/sharer/sharer.php?u=http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/' onclick='window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;'>
+<span class='hidden'>Facebook</span>
+</a>
+<a class='icon-google-plus' href='https://plus.google.com/share?url=http://aaronromeo.com/2014/05/04/storing-images-on-s3-with-django/' onclick='window.open(this.href, &#39;google-plus-share&#39;, &#39;width=490,height=530&#39;);return false;'>
+<span class='hidden'>Google+</span>
+</a>
+</section>
+</footer>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover prev read-next-story' href='/2017/11/12/jest-snapshots-with-webpacker/'>
+<section class='post'>
+<h2>Jest Snapshot testing within Rails Webpacker</h2>
+<p>Ah&hellip; The state of the Rails ecosystem couldn&rsquo;t be better for me. With the supplementing of the asset pipeline&hellip;</p>
+</section>
+</a>
+</aside>
+
+<footer class='site-footer clearfix'>
+<section class='copyright'>
+<a href='/'>> aaronromeo.com</a>
+&copy;
+2019
+</section>
+<section class='poweredby'>
+Casper theme powered by
+<a href='https://ghost.org'>Ghost</a>
+</section>
+</footer>
+</div>
+<script src="/javascripts/application.js"></script>
+</body>
+</html>

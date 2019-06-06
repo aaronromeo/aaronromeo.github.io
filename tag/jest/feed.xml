@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>&gt; aaronromeo.com: jest</title>
+  <subtitle>Posts tagged with jest</subtitle>
+  <id>http://aaronromeo.com</id>
+  <link href="http://aaronromeo.com"/>
+  <link href="http://aaronromeo.com/tag/jest/feed.xml" rel="self"/>
+  <updated>2017-11-12T15:44:00-05:00</updated>
+  <author>
+    <name>Aaron Romeo</name>
+  </author>
+  <entry>
+    <title>Jest Snapshot testing within Rails Webpacker</title>
+    <link rel="alternate" href="http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/"/>
+    <id>http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/</id>
+    <published>2017-11-12T15:44:00-05:00</published>
+    <updated>2019-06-06T12:31:35-04:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">Ah… The state of the Rails ecosystem couldn’t be better for me. With the supplementing of the asset pipeline with Webpacker the world of Javascript development has joined nicely with the world of Rails development.
+
+If you are like me and using ReactJS</summary>
+  </entry>
+</feed>

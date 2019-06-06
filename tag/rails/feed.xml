@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>&gt; aaronromeo.com: rails</title>
+  <subtitle>Posts tagged with rails</subtitle>
+  <id>http://aaronromeo.com</id>
+  <link href="http://aaronromeo.com"/>
+  <link href="http://aaronromeo.com/tag/rails/feed.xml" rel="self"/>
+  <updated>2017-11-18T07:26:00-05:00</updated>
+  <author>
+    <name>Aaron Romeo</name>
+  </author>
+  <entry>
+    <title>Managing localhost states</title>
+    <link rel="alternate" href="http://aaronromeo.com/2017/11/18/managing-localhost-states/"/>
+    <id>http://aaronromeo.com/2017/11/18/managing-localhost-states/</id>
+    <published>2017-11-18T07:26:00-05:00</published>
+    <updated>2019-06-06T12:31:35-04:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">When developing locally, it’s pretty common to have a bunch of cookies that do not pertain to the application being currently run. This is because all your cookies in your local development tend to share the same namespace localhost:{port} (where {port</summary>
+  </entry>
+  <entry>
+    <title>Analysis - Using materialized views in Rails and PostgreSQL</title>
+    <link rel="alternate" href="http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/"/>
+    <id>http://aaronromeo.com/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/</id>
+    <published>2019-06-05T20:00:00-04:00</published>
+    <updated>2019-06-06T12:39:52-04:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data</summary>
+  </entry>
+  <entry>
+    <title>Jest Snapshot testing within Rails Webpacker</title>
+    <link rel="alternate" href="http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/"/>
+    <id>http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/</id>
+    <published>2017-11-12T15:44:00-05:00</published>
+    <updated>2019-06-06T12:31:35-04:00</updated>
+    <author>
+      <name>Aaron Romeo</name>
+    </author>
+    <summary type="html">Ah… The state of the Rails ecosystem couldn’t be better for me. With the supplementing of the asset pipeline with Webpacker the world of Javascript development has joined nicely with the world of Rails development.
+
+If you are like me and using ReactJS</summary>
+  </entry>
+</feed>

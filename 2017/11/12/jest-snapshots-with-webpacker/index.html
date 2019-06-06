@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>> aaronromeo.com: Jest Snapshot testing within Rails Webpacker</title>
+<meta content='Ah&amp;hellip; The state of the Rails ecosystem couldn&amp;rsquo;t be better for me. With the supplementing of the asset pipeline with Webpacker the wor...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async='' src='https://www.googletagmanager.com/gtag/js?id=UA-109621676-1'></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  
+  gtag('config', 'UA-109621676-1');
+</script>
+
+<meta content='&gt; aaronromeo.com' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='Jest Snapshot testing within Rails Webpacker' property='og:title'>
+<meta content='Ah&amp;hellip; The state of the Rails ecosystem couldn&amp;rsquo;t be better for me. With the supplementing of the asset pipeline with Webpacker the wor...' property='og:description'>
+<meta content='http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/' property='og:url'>
+<meta content='2017-11-12' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='tweetsfromaaron' name='twitter:site'>
+<meta content='Jest Snapshot testing within Rails Webpacker' name='twitter:title'>
+<meta content='Ah&amp;hellip; The state of the Rails ecosystem couldn&amp;rsquo;t be better for me. With the supplementing of the asset pipeline with Webpacker the wor...' name='twitter:description'>
+<meta content='http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/' name='twitter:url'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='nav'>
+<h3 class='nav-title'>Menu</h3>
+<a class='nav-close' href='#'>
+<span class='hidden'>Close</span>
+</a>
+<ul>
+<li class='nav-home'>
+<a href='/'>Home</a>
+</li>
+</ul>
+<ul>
+<li class='nav-analysis-using-materialized-views-in-rails-and-postgresql'>
+<a href='/2019/06/06/analysis-using-materialized-views-in-rails-and-postgresql/'>Analysis - Using materialized views in Rails and PostgreSQL</a>
+</li>
+<li class='nav-managing-localhost-states'>
+<a href='/2017/11/18/managing-localhost-states/'>Managing localhost states</a>
+</li>
+<li class='nav-jest-snapshot-testing-within-rails-webpacker nav-current'>
+<a href='/2017/11/12/jest-snapshots-with-webpacker/'>Jest Snapshot testing within Rails Webpacker</a>
+</li>
+<li class='nav-storing-images-or-files-on-s3-with-django'>
+<a href='/2014/05/04/storing-images-on-s3-with-django/'>Storing images (or files) on S3 with Django</a>
+</li>
+</ul>
+<a class='subscribe-button icon-feed' href='/feed.xml'>Subscribe</a>
+</div>
+<span class='nav-cover'></span>
+
+<div class='site-wrapper'>
+<header class='main-header no-cover post-head'>
+<nav class='main-nav clearfix'>
+<a class='menu-button icon-menu' href='#'>
+<span class='word'>Menu</span>
+</a>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<header class='post-header'>
+<h1 class='post-title'>Jest Snapshot testing within Rails Webpacker</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2017-11-12'>
+12 November 2017
+</time>
+on <a href='/tag/rails/'>rails</a>, <a href='/tag/jest/'>jest</a>, <a href='/tag/webpacker/'>webpacker</a>, <a href='/tag/reactjs/'>reactjs</a>
+</section>
+</header>
+<section class='post-content'><p>Ah&hellip; The state of the Rails ecosystem couldn&rsquo;t be better for me. With the supplementing of the asset pipeline with <a href="https://github.com/rails/webpacker" rel="nofollow">Webpacker</a> the world of Javascript development has joined nicely with the world of Rails development.</p>
+
+<p>If you are like me and using ReactJS as your staple JS view layer, you probably know of the testing tool <a href="https://facebook.github.io/jest/" rel="nofollow">Jest</a> also created by the smart people at Facebook. This short tutorial assumes you have Webpacker and ReactJS running and you want to get setup with Jest.</p>
+
+<h1>Setup</h1>
+
+<h5>Install your packages</h5>
+
+<p><code>yarn</code> or <code>npm</code> install the following packages</p>
+
+<ul>
+<li><code>jest</code> (the main testing library)</li>
+<li><code>babel-jest</code> (assuming you are using <code>babel</code>, this is the associated <code>jest</code> plugin)</li>
+<li><code>babel-preset-es2015</code> (Babel preset for all es2015 plugins)</li>
+<li><code>babel-preset-react</code> (Babel preset for react)</li>
+<li><code>react-test-renderer</code> (another FB testing tool which renders React components to pure Javascript objects)</li>
+</ul>
+
+<p><code>yarn</code> does a better job of managing your JS packages, so here you go&hellip;</p>
+<div class="highlight"><pre class="highlight plaintext"><code>yarn add --dev jest babel-jest babel-preset-es2015 babel-preset-react react-test-renderer
+</code></pre></div>
+<h5>Add the <code>.baberc</code> file to your project root</h5>
+
+<p>Till this point, your project has been happily using the <code>config/webpack/loaders/react.js</code> and <code>config/webpack/loaders/babel.js</code> to translate your ES6 JS back to the stoneage. With Jest, though, it needs a little something more.
+This is what my <code>.babelrc</code> file looks like. Yours will be similar, but your <code>plugins</code> will be dependent on what you have installed in your <code>react.js</code> or <code>babel.js</code> files.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>{
+  "presets": [
+    "es2015",
+    "react",
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "transform-function-bind",
+        "transform-class-properties"
+      ]
+    }
+  }
+}
+</code></pre></div>
+<h5>Modify the <code>package.json</code> to include the Jest config</h5>
+
+<p>Here is what my diff looked like.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>   "scripts": {
+     "eslint": "eslint --ext .jsx --ext .js app/javascript/**"
++  },
++  "jest": {
++    "roots": [
++      "app/javascript"
++    ],
++    "moduleDirectories": [
++      "&lt;rootDir&gt;/node_modules"
++    ],
++    "moduleFileExtensions": [
++      "js",
++      "jsx"
++    ]
+   }
+ }
+</code></pre></div>
+<h1>An example</h1>
+
+<p>Say you have the files in your project to define the component <code>BlogExample</code></p>
+
+<ul>
+<li><p><code>app/javascript/components/blog_example/index.js</code></p>
+<div class="highlight"><pre class="highlight jsx"><code><span class="k">import</span> <span class="nx">BlogExample</span> <span class="k">from</span> <span class="s1">'./blog_example'</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">BlogExample</span>
+</code></pre></div></li>
+<li><p><code>app/javascript/components/blog_example/blog_example.js</code></p>
+<div class="highlight"><pre class="highlight jsx"><code><span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span>
+<span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span>
+
+<span class="kd">class</span> <span class="nx">BlogExample</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">contacts</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">arrayOf</span><span class="p">(</span>
+      <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">shape</span><span class="p">({</span>
+        <span class="na">email</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+      <span class="p">}).</span><span class="nx">isRequired</span>
+    <span class="p">).</span><span class="nx">isRequired</span><span class="p">,</span>
+    <span class="na">handleDeleteContact</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="p">}</span>
+
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">renderContacts</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderContacts</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="nx">renderContacts</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">contacts</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">contact</span> <span class="o">=&gt;</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">li</span> <span class="na">key=</span><span class="si">{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="p">&gt;</span>
+       <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href=</span><span class="s2">"#"</span> <span class="na">onClick=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">handleDeleteContact</span><span class="p">(</span><span class="nx">contact</span><span class="p">)</span><span class="si">}</span><span class="p">&gt;</span><span class="si">{</span><span class="nx">contact</span><span class="p">.</span><span class="nx">email</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+    <span class="p">))</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="si">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderContacts</span><span class="p">()</span> <span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">BlogExample</span>
+</code></pre></div></li>
+</ul>
+
+<p>You could then create the following base test case</p>
+
+<ul>
+<li><p><code>app/javascript/components/blog_example/__tests__/blog_example.spec.jsx</code></p>
+<div class="highlight"><pre class="highlight jsx"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span>
+<span class="k">import</span> <span class="nx">renderer</span> <span class="k">from</span> <span class="s1">'react-test-renderer'</span>
+<span class="k">import</span> <span class="nx">BlogExample</span> <span class="k">from</span> <span class="s1">'../index'</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="s1">'Renders contacts'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">component</span> <span class="o">=</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span>
+    <span class="p">&lt;</span><span class="nc">BlogExample</span>
+      <span class="na">contacts=</span><span class="si">{</span><span class="p">[{</span>
+          <span class="na">email</span><span class="p">:</span> <span class="s1">'jane@example.com'</span><span class="p">,</span>
+          <span class="na">id</span><span class="p">:</span> <span class="s1">'1'</span><span class="p">,</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="na">email</span><span class="p">:</span> <span class="s1">'joe@example.com'</span><span class="p">,</span>
+          <span class="na">id</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">,</span>
+        <span class="p">}]</span><span class="si">}</span>
+      <span class="na">handleDeleteContact=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{}</span><span class="si">}</span>
+    <span class="p">/&gt;</span>
+  <span class="p">)</span>
+  <span class="kd">const</span> <span class="nx">tree</span> <span class="o">=</span> <span class="nx">component</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">tree</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">()</span>
+<span class="p">})</span>
+</code></pre></div></li>
+</ul>
+
+<p>If you run this with <code>bin/yarn jest</code>, you should see the following output generated</p>
+<div class="highlight"><pre class="highlight plaintext"><code> PASS  app/javascript/components/blog_example/__tests__/blog_example.spec.jsx
+  ✓ Null Contacts (12ms)
+
+ › 1 snapshot written.
+Snapshot Summary
+ › 1 snapshot written in 1 test suite.
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   1 added, 1 total
+Time:        1.054s
+</code></pre></div>
+<p>After you have run this, you should see the file <code>app/javascript/components/blog_example/__tests__/__snapshots__/blog_example.spec.jsx.snap</code> also created.</p>
+
+<p>Say you modify your code base with a change, for example</p>
+<div class="highlight"><pre class="highlight plaintext"><code>diff --git a/app/javascript/components/blog_example/blog_example.js b/app/javascript/components/blog_example/blog_example.js
+index 1717dab..72bfa39 100644
+--- a/app/javascript/components/blog_example/blog_example.js
++++ b/app/javascript/components/blog_example/blog_example.js
+@@ -20,7 +20,7 @@ class BlogExample extends Component {
+   renderContacts() {
+     return this.props.contacts.map(contact =&gt; (
+       &lt;li key={contact.id}&gt;
+-       &lt;a href="#" onClick={() =&gt; this.props.handleDeleteContact(contact)}&gt;{contact.email}&lt;/a&gt;
++        &lt;a href="#" onClick={() =&gt; this.props.handleDeleteContact(contact)}&gt;* {contact.email}&lt;/a&gt;
+       &lt;/li&gt;
+     ))
+   }
+</code></pre></div>
+<p>This will result in a failing test when you run <code>bin/yarn jest</code></p>
+<div class="highlight"><pre class="highlight plaintext"><code>yarn run v1.3.2
+warning package.json: No license field
+$ /Users/aromeo/workspace/addresser/node_modules/.bin/jest app/javascript/components/blog_example
+ FAIL  app/javascript/components/blog_example/__tests__/blog_example.spec.jsx
+  ✕ Renders contacts (19ms)
+
+  ● Renders contacts
+
+    expect(value).toMatchSnapshot()
+
+    Received value does not match stored snapshot 1.
+
+    - Snapshot
+    + Received
+
+    @@ -2,17 +2,19 @@
+        &lt;li&gt;
+          &lt;a
+            href="#"
+            onClick={[Function]}
+          &gt;
+    +       *
+            jane@example.com
+          &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;a
+            href="#"
+            onClick={[Function]}
+          &gt;
+    +       *
+            joe@example.com
+          &lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/div&gt;
+
+      at Object.&lt;anonymous&gt; (app/javascript/components/blog_example/__tests__/blog_example.spec.jsx:19:16)
+          at new Promise (&lt;anonymous&gt;)
+          at &lt;anonymous&gt;
+      at process._tickCallback (internal/process/next_tick.js:188:7)
+
+ › 1 snapshot test failed.
+Snapshot Summary
+ › 1 snapshot test failed in 1 test suite. Inspect your code changes or run with `yarn run jest -- -u` to update them.
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   1 failed, 1 total
+Time:        1.324s
+Ran all test suites matching /app\/javascript\/components\/blog_example/i.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+</code></pre></div>
+<p>As expected with Jest, <code>bin/yarn jest -- -u</code> updates your snapshot.</p>
+
+<h1>Gotchas</h1>
+
+<p><code>yarn</code> doesn&rsquo;t verify that the version of <code>react-test-renderer</code> matches the version of <code>react</code> you have installed.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>         "jest": "21.2.1",
+    -    "react-test-renderer": "16.0.0",
+    +    "react-test-renderer": "^15.5.4",
+         "redux-devtools": "^3.4.0",
+</code></pre></div>
+<p>If they don&rsquo;t match, you&rsquo;ll get a nasty error&hellip; Like this one I got.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>yarn run v1.3.2
+warning package.json: No license field
+$ /Users/aromeo/workspace/addresser/node_modules/.bin/jest app/javascript/components/blog_example
+ FAIL  app/javascript/components/blog_example/__tests__/blog_example.spec.jsx
+  ● Test suite failed to run
+
+    TypeError: Cannot read property 'ReactCurrentOwner' of undefined
+
+      at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:77:40
+      at Object.&lt;anonymous&gt; (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7639:5)
+      at Object.&lt;anonymous&gt; (node_modules/react-test-renderer/index.js:6:20)
+      at Object.&lt;anonymous&gt; (app/javascript/components/blog_example/__tests__/blog_example.spec.jsx:2:26)
+          at Generator.next (&lt;anonymous&gt;)
+          at new Promise (&lt;anonymous&gt;)
+          at Generator.next (&lt;anonymous&gt;)
+          at &lt;anonymous&gt;
+      at process._tickCallback (internal/process/next_tick.js:188:7)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.764s, estimated 1s
+Ran all test suites matching /app\/javascript\/components\/blog_example/i.
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+</code></pre></div></section>
+<footer class='post-footer'>
+<figure class='author-image'>
+<a class='img' href='/author/aaron-romeo/' style='background-image: url(https://www.gravatar.com/avatar/53231b46b45f4e472ee5027d4f117ab5?size=68)'>
+<span class='hidden'>Aaron Romeo's Picture</span>
+</a>
+</figure>
+<section class='author'>
+<h4>
+<a href='/author/aaron-romeo/'>Aaron Romeo</a>
+</h4>
+<p></p>
+Read
+<a href='/author/aaron-romeo/'>more posts</a>
+by this author.
+<div class='author-meta'>
+<span class='author-location icon-location'>Toronto, Ontario, Canada</span>
+<span class='author-link icon-link'>
+<a href='aaronromeo.com'>aaronromeo.com</a>
+</span>
+</div>
+</section>
+<section class='share'>
+<h4>Share this post</h4>
+<a class='icon-twitter' href='https://twitter.com/intent/tweet?text=Jest Snapshot testing within Rails Webpacker&amp;amp;url=http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/' onclick='window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;'>
+<span class='hidden'>Twitter</span>
+</a>
+<a class='icon-facebook' href='https://www.facebook.com/sharer/sharer.php?u=http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/' onclick='window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;'>
+<span class='hidden'>Facebook</span>
+</a>
+<a class='icon-google-plus' href='https://plus.google.com/share?url=http://aaronromeo.com/2017/11/12/jest-snapshots-with-webpacker/' onclick='window.open(this.href, &#39;google-plus-share&#39;, &#39;width=490,height=530&#39;);return false;'>
+<span class='hidden'>Google+</span>
+</a>
+</section>
+</footer>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover read-next-story' href='/2014/05/04/storing-images-on-s3-with-django/'>
+<section class='post'>
+<h2>Storing images (or files) on S3 with Django</h2>
+<p>There comes a time when you need to upload stuff to your server via your Django app. You can&hellip;</p>
+</section>
+</a>
+<a class='no-cover prev read-next-story' href='/2017/11/18/managing-localhost-states/'>
+<section class='post'>
+<h2>Managing localhost states</h2>
+<p>When developing locally, it&rsquo;s pretty common to have a bunch of cookies that do not pertain to the application&hellip;</p>
+</section>
+</a>
+</aside>
+
+<footer class='site-footer clearfix'>
+<section class='copyright'>
+<a href='/'>> aaronromeo.com</a>
+&copy;
+2019
+</section>
+<section class='poweredby'>
+Casper theme powered by
+<a href='https://ghost.org'>Ghost</a>
+</section>
+</footer>
+</div>
+<script src="/javascripts/application.js"></script>
+</body>
+</html>
