@@ -1,4 +1,5 @@
 ---
+
 title: Tutorial - Using materialized views in Rails and PostgreSQL
 date: 2019-07-01 00:00 UTC
 category: Rails
@@ -7,6 +8,7 @@ authors: Aaron Romeo
 summary: Building a Rails app that utilizes Materialized Views via Scenic and Postgres.
 layout: post
 published: false
+
 ---
 
 # A working example

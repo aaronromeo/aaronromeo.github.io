@@ -1,4 +1,5 @@
 ---
+
 title: Analysis - Using materialized views in Rails and PostgreSQL
 date: 2019-06-10 00:00 UTC
 category: Rails
@@ -6,6 +7,7 @@ tags: rails, scenic, postgres, postgresql
 authors: Aaron Romeo
 summary: Materialized views can simplify data storage, increase flexibility, simplify abstractions and increase performance for Rails/Postgres.
 layout: post
+
 ---
 
 Sometimes you get asked for a perfectly reasonable feature. It might sounds trivial on the surface. However, the simplicity of a request can often mask the complexity required to achieve the implementation. Often, this complexity is a result of the data modeling used to store the data vs the data modeling required to analyze the data. For example, the request might result in deduping a union join of multiple tables or it might require an unperformant query. Part of the job of a software architect is to allow product people to worry about the product while the architect worries about delivering the product.
