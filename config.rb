@@ -78,7 +78,7 @@ configure :development do
 
   activate :disqus do |d|
     # using a different shortname for production builds
-    d.shortname = "aaronromeo-com"
+    d.shortname = "dev-aaronromeo-com"
   end
 end
 
