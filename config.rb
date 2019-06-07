@@ -16,7 +16,7 @@ config[:casper] = {
     bio: nil, # Optional
     location: "Toronto, Ontario, Canada",
     website: "aaronromeo.com",
-    gravatar_email: 'aaron.romeo@gmail.com', # Optional
+    gravatar_email: 'aaron@aaronromeo.com', # Optional
     twitter: "tweetsfromaaron"
   },
   navigation: {
