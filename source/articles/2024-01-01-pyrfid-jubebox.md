@@ -24,7 +24,16 @@ Enter the `pyrfid-jukebox` project, a child-friendly music player that’s as fu
 
 This is a post about my journey creating such a tool.
 
-
+Diving into the text stack. This project relies on an RFID reader connected to the Raspberry Pi running Bullseye.
+The intention of the RFID reader is to allow RFID cards to be associated with music albums, such that RFID cards trigger the albums and the playing of the albums on the Raspberry Pi.
+The Raspberry Pi itself is running Bullseye and CMUS, which is a Linux music player,
+as well as Blue ALSA and Python.
+CMUS was specifically selected as it allowed commands to be sent to it via either CMUS remote
+or a socket.
+The decision to use Blue ALSA versus...
+Pulse audio.
+The steps for the initial setup and configuration are outlined
+in the readme file.
 
 
 Exploring the pyrfid-jukebox Project: A Technical Deep Dive
