@@ -41,4 +41,16 @@
       closeNav();
     }
   });
+
+  // Handle social share links
+  document.querySelectorAll('.share-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var width = parseInt(this.getAttribute('data-width'), 10);
+      var height = parseInt(this.getAttribute('data-height'), 10);
+      var left = (screen.width - width) / 2;
+      var top = (screen.height - height) / 2;
+      window.open(this.href, 'share-window', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+    });
+  });
 })();
