@@ -21,3 +21,4 @@
 - Be concise and direct in responses
 - Follow existing code conventions in this project
 - Run build/lint commands to verify changes when applicable
+
