@@ -1,0 +1,18 @@
+<aside class="read-next">
+  {{ with .PrevInSection }}
+  <a class="read-next-story" href="{{ .RelPermalink }}"{{ if .Params.cover }} style="background-image: url({{ .Params.cover }})"{{ else }} class="no-cover"{{ end }}>
+    <section class="post">
+      <h2>{{ .Title }}</h2>
+      <p>{{ .Summary | truncate 19 }}&hellip;</p>
+    </section>
+  </a>
+  {{ end }}
+  {{ with .NextInSection }}
+  <a class="read-next-story prev" href="{{ .RelPermalink }}"{{ if .Params.cover }} style="background-image: url({{ .Params.cover }})"{{ else }} class="no-cover"{{ end }}>
+    <section class="post">
+      <h2>{{ .Title }}</h2>
+      <p>{{ .Summary | truncate 19 }}&hellip;</p>
+    </section>
+  </a>
+  {{ end }}
+</aside>

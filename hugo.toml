@@ -1,0 +1,61 @@
+baseURL = 'https://aaronromeo.com/'
+languageCode = 'en-us'
+title = '> aaronromeo.com'
+theme = 'casper'
+
+# Pagination
+[pagination]
+  pagerSize = 6
+
+# Taxonomies
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+
+# Author configuration
+[params.author]
+  name = 'Aaron Romeo'
+  bio = ''
+  location = 'Toronto, Ontario, Canada'
+  website = 'https://aaronromeo.com'
+  gravatar_email = 'aaron@aaronromeo.com'
+  twitter = 'tweetsfromaaron'
+
+# Site parameters
+[params]
+  description = 'Code and other stuff.'
+  date_format = '02 January 2006'
+  disqus_shortname = 'dev-aaronromeo-com'
+  cover = '/images/blog-cover.jpg'
+  
+  # Navigation
+  [[params.navigation]]
+    label = 'Home'
+    url = '/'
+
+# Privacy settings for external services
+[privacy]
+  [privacy.disqus]
+    disable = false
+  [privacy.x]
+    enableDNT = true
+  [privacy.facebook]
+    disable = false
+    enableDNT = true
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = 'monokai'
+    tabWidth = 4
+
+# Build configuration
+[build]
+  writeStats = false

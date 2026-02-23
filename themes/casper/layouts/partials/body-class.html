@@ -1,0 +1,13 @@
+{{- $class := "" -}}
+{{- if .IsHome -}}
+  {{- $class = "home-template" -}}
+{{- else if .IsPage -}}
+  {{- if eq .Type "posts" -}}
+    {{- $class = "post-template" -}}
+  {{- else -}}
+    {{- $class = "page-template" -}}
+  {{- end -}}
+{{- else if .IsSection -}}
+  {{- $class = "paged" -}}
+{{- end -}}
+{{- $class -}}

@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{ $cover := or .Params.cover .Site.Params.cover }}
+<header class="main-header{{ if not $cover }} no-cover{{ end }}"{{ if $cover }} style="background-image: url({{ $cover }})"{{ end }}>
+  <nav class="main-nav overlay clearfix">
+    {{ if .Site.Params.Author.gravatar_email }}
+    <a class="blog-logo" href="{{ "/" | relURL }}">
+      <img src="https://www.gravatar.com/avatar/{{ md5 .Site.Params.Author.gravatar_email }}?size=38" alt="{{ .Site.Title }}">
+    </a>
+    {{ end }}
+    {{ if .Site.Params.navigation }}
+    <a class="menu-button icon-menu" href="#">
+      <span class="word">Menu</span>
+    </a>
+    {{ end }}
+  </nav>
+  <div class="vertical">
+    <div class="main-header-content inner">
+      <h1 class="page-title">{{ .Site.Title }}</h1>
+      <h2 class="page-description">{{ .Site.Params.Description }}</h2>
+    </div>
+  </div>
+  <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45">
+    <span class="hidden">Scroll Down</span>
+  </a>
+</header>
+
+<main id="content" class="content" role="main">
+  {{ $paginator := .Paginate (where .Site.RegularPages "Section" "posts") }}
+  
+  {{ partial "pagination-top.html" . }}
+  
+  {{ range $paginator.Pages }}
+    {{ partial "post-card.html" . }}
+  {{ end }}
+  
+  {{ partial "pagination.html" . }}
+</main>
+{{ end }}

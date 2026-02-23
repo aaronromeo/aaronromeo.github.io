@@ -1,0 +1,46 @@
+{{ define "main" }}
+<header class="main-header author-head{{ if not .Params.cover }} no-cover{{ end }}"{{ if .Params.cover }} style="background-image: url({{ .Params.cover }})"{{ end }}>
+  <nav class="main-nav overlay clearfix">
+    {{ if .Site.Params.Author.gravatar_email }}
+    <a class="blog-logo" href="{{ "/" | relURL }}">
+      <img src="https://www.gravatar.com/avatar/{{ md5 .Site.Params.Author.gravatar_email }}?size=38" alt="{{ .Site.Title }}">
+    </a>
+    {{ end }}
+    <a class="menu-button icon-menu" href="#">
+      <span class="word">Menu</span>
+    </a>
+  </nav>
+</header>
+
+<main class="content" role="main">
+  <section class="author-profile">
+    <figure class="author-image">
+      <a class="img" href="{{ "/author/" | relURL }}" style="background-image: url(https://www.gravatar.com/avatar/{{ md5 .Site.Params.Author.gravatar_email }}?size=150)">
+        <span class="hidden">{{ .Site.Params.Author.name }}'s Picture</span>
+      </a>
+    </figure>
+    <h1 class="author-title">{{ .Site.Params.Author.name }}</h1>
+    {{ with .Site.Params.Author.bio }}
+    <h2 class="author-bio">{{ . }}</h2>
+    {{ end }}
+    <div class="author-meta">
+      {{ with .Site.Params.Author.location }}
+      <span class="author-location"><i class="fas fa-map-marker-alt"></i> {{ . }}</span>
+      {{ end }}
+      {{ with .Site.Params.Author.website }}
+      <span class="author-link"><i class="fas fa-link"></i> <a href="{{ . }}">{{ . }}</a></span>
+      {{ end }}
+      {{ with .Site.Params.Author.twitter }}
+      <span class="author-twitter"><i class="fab fa-twitter"></i> <a href="https://twitter.com/{{ . }}">@{{ . }}</a></span>
+      {{ end }}
+    </div>
+  </section>
+  
+  <main id="content" class="content" role="main">
+    <h3>Posts by {{ .Site.Params.Author.name }}</h3>
+    {{ range where .Site.RegularPages "Section" "posts" }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </main>
+</main>
+{{ end }}

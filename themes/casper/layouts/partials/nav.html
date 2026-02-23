@@ -1,0 +1,24 @@
+<nav class="nav">
+  <h3 class="nav-title">Menu</h3>
+  <a class="nav-close" href="#">
+    <span class="hidden">Close</span>
+  </a>
+  <ul>
+    {{ range .Site.Params.navigation }}
+    <li class="nav-{{ .label | urlize }}">
+      <a href="{{ .url | relURL }}">{{ .label }}</a>
+    </li>
+    {{ end }}
+  </ul>
+  {{ if eq .Section "posts" }}
+  <ul>
+    {{ range first 10 (where .Site.RegularPages "Section" "posts") }}
+    <li class="nav-{{ .Title | urlize }}">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+  </ul>
+  {{ end }}
+  <a class="subscribe-button icon-feed" href="{{ "index.xml" | relURL }}">Subscribe</a>
+</nav>
+<span class="nav-cover"></span>

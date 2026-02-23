@@ -1,0 +1,13 @@
+name = 'Casper'
+license = 'MIT'
+licenselink = 'https://github.com/aaronromeo/aaronromeo.github.io/blob/main/LICENSE'
+description = 'A Hugo port of the Casper theme'
+
+[author]
+  name = 'Aaron Romeo'
+  homepage = 'https://aaronromeo.com'
+
+[original]
+  author = 'Ghost'
+  homepage = 'https://ghost.org'
+  repo = 'https://github.com/TryGhost/Casper'

@@ -1,0 +1,8 @@
+{{ $description := .Site.Params.Description }}
+{{ if .IsPage }}
+  {{ $description = .Summary }}
+{{ end }}
+<meta name="description" content="{{ $description }}">
+
+{{ partial "opengraph.html" . }}
+{{ partial "twitter_cards.html" . }}

@@ -1,0 +1,23 @@
+<article class="post">
+  <header class="post-header">
+    <h2 class="post-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+  </header>
+  <section class="post-excerpt">
+    <p>
+      {{ .Summary }}
+      <a class="read-more" href="{{ .RelPermalink }}">&raquo;</a>
+    </p>
+  </section>
+  <footer class="post-meta">
+    {{ with .Site.Params.Author.gravatar_email }}
+    <img class="author-thumb" src="https://www.gravatar.com/avatar/{{ md5 . }}?size=24" alt="{{ $.Site.Params.Author.name }}" nopin="nopin">
+    {{ end }}
+    <a href="{{ "/author/" | relURL }}">{{ .Site.Params.Author.name }}</a>
+    {{ if .Params.tags }}
+    on {{ range $index, $tag := .Params.tags }}{{ if $index }}, {{ end }}<a href="{{ "/tags/" | relURL }}{{ $tag | urlize }}/">{{ $tag }}</a>{{ end }}
+    {{ end }}
+    <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">
+      {{ .Date.Format $.Site.Params.date_format }}
+    </time>
+  </footer>
+</article>

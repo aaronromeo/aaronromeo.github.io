@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>{{ partial "page-title.html" . }}</title>
+  
+  {{ partial "head.html" . }}
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400">
+  <link rel="stylesheet" href="{{ "css/casper.css" | relURL }}">
+  
+  {{ with .OutputFormats.Get "rss" -}}
+    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+  {{ end -}}
+  
+  <link rel="icon" href="{{ "images/favicon.ico" | relURL }}" type="image/x-icon">
+</head>
+<body class="{{ partial "body-class.html" . }} nav-closed">
+
+  {{ partial "nav.html" . }}
+
+  <div class="site-wrapper">
+    {{ block "main" . }}{{ end }}
+    
+    <footer class="site-footer clearfix">
+      <section class="copyright">
+        <a href="{{ "/" | relURL }}">{{ .Site.Title }}</a> &copy; {{ now.Year }}
+      </section>
+      <section class="poweredby">
+        Casper theme powered by <a href="https://gohugo.io/">Hugo</a>
+      </section>
+    </footer>
+  </div>
+
+  <script src="{{ "js/nav.js" | relURL }}"></script>
+</body>
+</html>

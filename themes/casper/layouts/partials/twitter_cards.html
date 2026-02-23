@@ -1,0 +1,10 @@
+<meta name="twitter:card" content="summary">
+{{ with .Site.Params.Author.twitter }}
+<meta name="twitter:site" content="@{{ . }}">
+{{ end }}
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ .Summary | default .Site.Params.Description }}">
+<meta name="twitter:url" content="{{ .Permalink }}">
+{{ if .Params.cover }}
+<meta name="twitter:image:src" content="{{ .Params.cover | absURL }}">
+{{ end }}

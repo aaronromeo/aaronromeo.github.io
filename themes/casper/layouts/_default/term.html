@@ -1,0 +1,30 @@
+{{ define "main" }}
+<header class="main-header tag-head{{ if not .Params.cover }} no-cover{{ end }}"{{ if .Params.cover }} style="background-image: url({{ .Params.cover }})"{{ end }}>
+  <nav class="main-nav overlay clearfix">
+    {{ if .Site.Params.Author.gravatar_email }}
+    <a class="blog-logo" href="{{ "/" | relURL }}">
+      <img src="https://www.gravatar.com/avatar/{{ md5 .Site.Params.Author.gravatar_email }}?size=38" alt="{{ .Site.Title }}">
+    </a>
+    {{ end }}
+    <a class="menu-button icon-menu" href="#">
+      <span class="word">Menu</span>
+    </a>
+  </nav>
+  <div class="vertical">
+    <div class="main-header-content inner">
+      <h1 class="page-title">{{ .Title }}</h1>
+      <h2 class="page-description">{{ len .Pages }} post{{ if ne (len .Pages) 1 }}s{{ end }}</h2>
+    </div>
+  </div>
+</header>
+
+<main id="content" class="content" role="main">
+  {{ $paginator := .Paginate .Pages }}
+  
+  {{ range $paginator.Pages }}
+    {{ partial "post-card.html" . }}
+  {{ end }}
+  
+  {{ partial "pagination.html" . }}
+</main>
+{{ end }}

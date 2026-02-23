@@ -1,0 +1,15 @@
+<nav class="pagination" role="pagination">
+  <div class="inner">
+    {{ if .Paginator.HasPrev }}
+    <a class="newer-posts" href="{{ .Paginator.Prev.URL }}">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    {{ end }}
+    <span class="page-number">Page {{ .Paginator.PageNumber }} of {{ .Paginator.TotalPages }}</span>
+    {{ if .Paginator.HasNext }}
+    <a class="older-posts" href="{{ .Paginator.Next.URL }}">
+      <i class="fas fa-arrow-right"></i>
+    </a>
+    {{ end }}
+  </div>
+</nav>
