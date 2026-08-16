@@ -1,24 +1,29 @@
 # AGENTS.md
 
-## Working Agreements
+Personal blog (aaronromeo.com) built with Hugo. No JS toolchain, no tests, no package.json — Hugo is the only tool.
 
-### Plan Mode First
-- Always start in plan mode when beginning a new task
-- Discuss requirements, validate assumptions, and outline approach before making changes
-- Only exit plan mode and execute after the plan is approved
+## Commands
+- Use `/usr/local/bin/hugo` — bare `hugo` resolves to an asdf shim with no version set and fails.
+- Dev server with drafts: `/usr/local/bin/hugo server -D`
+- Production build (matches CI): `/usr/local/bin/hugo --gc --minify` → `public/`
+- This is the only verification step; there is no lint or test suite.
 
-### File System Modifications
-- After every command that modifies the file system (write, edit, delete, mkdir, rm, etc.), confirm the operation was successful
-- Verify changes by reading the file or checking the directory state
-- Report any failures immediately
+## Deploy
+- Push to `master` (not `main`) triggers `.github/workflows/hugo.yml` → GitHub Pages.
+- CI pins Hugo **0.120.0 extended**; local is 0.153.x. If a template works locally but the deploy build fails, suspect version drift first.
+- Posts with `draft: true` are excluded from deploys; they only render under `hugo server -D`.
 
-### Command Execution
-- Require explicit permission before executing commands that modify the file system
-- Do not execute destructive or irreversible commands without clear user approval
-- Exception: If user explicitly says "proceed without asking" or similar, you may execute without confirmation
+## Content conventions
+- Posts are page bundles: `content/posts/YYYY-MM-DD-slug/index.md` with cover images in the same directory.
+- Post frontmatter is YAML (`---`) even though `archetypes/default.md` is TOML (`+++`) — follow existing posts, not the archetype.
+- Raw HTML is allowed in markdown (`markup.goldmark.renderer.unsafe = true`).
 
-### General Guidelines
-- Be concise and direct in responses
-- Follow existing code conventions in this project
-- Run build/lint commands to verify changes when applicable
+## Theme
+- `themes/casper/` is a local in-repo port of Ghost's Casper theme — not a submodule or external dependency. Edit templates in place under `themes/casper/layouts/`.
+- `MIGRATION_CHECKLIST.md` is a completed Middleman→Hugo migration record; treat as history, not a todo list.
 
+## Working agreements
+- Start in plan mode for new tasks; execute only after the plan is approved.
+- Require explicit permission before running commands that modify the file system.
+- After any file-system modification, verify by reading the file or checking directory state; report failures immediately.
+- Be concise and follow existing conventions.
